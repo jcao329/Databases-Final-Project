@@ -6,7 +6,7 @@ from ast import literal_eval
 def convert_to_none(val):
     return None if pd.isna(val) else val
 
-# Database connection
+# Connects to the pokemon databse, change to your password
 myConnection = mysql.connector.connect(
     user = 'root',
     password = <yourpassword>,
@@ -15,7 +15,7 @@ myConnection = mysql.connector.connect(
 )
 cursorObject = myConnection.cursor()
 
-# Load CSVs
+# Loads CSVs, still needs team data
 try:
     pokemon = pd.read_csv('data/pokemon.csv')
     moves = pd.read_csv('data/moves.csv')
@@ -27,7 +27,7 @@ except Exception as e:
     print("Cannot load files:", e)
     exit(1)
 
-# Create tables with proper relationships
+# Creates tables, needs team table
 cursorObject.execute("""
 CREATE TABLE IF NOT EXISTS types (
     type_name VARCHAR(20) PRIMARY KEY
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS trainer_pokemon (
 );
 """)
 
-# Populate the types table with unique type names from all columns
+# Populates the types table with unique type names from all columns
 all_types = set()
 all_types.update(pokemon['type1'].dropna().unique())
 all_types.update(pokemon['type2'].dropna().unique())
@@ -118,7 +118,7 @@ for type_name in all_types:
         )
 myConnection.commit()
 
-# Insert regions
+# Inserts other data
 for _, row in regions.iterrows():
     cursorObject.execute(
         "INSERT INTO regions (region_id, region_name) VALUES (%s, %s);",
@@ -126,7 +126,6 @@ for _, row in regions.iterrows():
     )
 myConnection.commit()
 
-# Insert pokemon
 for _, row in pokemon.iterrows():
     cursorObject.execute("""
         INSERT INTO pokemon
@@ -142,7 +141,6 @@ for _, row in pokemon.iterrows():
     ))
 myConnection.commit()
 
-# Process abilities using literal_eval
 pokemon['abilities'] = pokemon['abilities'].apply(literal_eval)
 for _, row in pokemon.iterrows():
     for ability in row['abilities']:
@@ -152,7 +150,6 @@ for _, row in pokemon.iterrows():
         """, (convert_to_none(row['pokemon_id']), convert_to_none(ability)))
 myConnection.commit()
 
-# Insert moves
 for _, row in moves.iterrows():
     cursorObject.execute("""
         INSERT INTO moves
@@ -168,7 +165,6 @@ for _, row in moves.iterrows():
     ))
 myConnection.commit()
 
-# Insert type effectiveness
 for _, row in type_eff.iterrows():
     cursorObject.execute("""
         INSERT INTO type_effectiveness
@@ -181,7 +177,6 @@ for _, row in type_eff.iterrows():
     ))
 myConnection.commit()
 
-# Insert trainers
 for _, row in trainers.iterrows():
     cursorObject.execute(
         "INSERT INTO trainers (trainer_ID, trainer_name) VALUES (%s, %s);",
@@ -189,7 +184,6 @@ for _, row in trainers.iterrows():
     )
 myConnection.commit()
 
-# Insert trainer_pokemon
 for _, row in trainer_pokemon.iterrows():
     cursorObject.execute(
         "INSERT INTO trainer_pokemon (trainer_ID, pokemon_name) VALUES (%s, %s);",
@@ -197,6 +191,6 @@ for _, row in trainer_pokemon.iterrows():
     )
 myConnection.commit()
 
-# Close connections
+# Closes connections
 cursorObject.close()
 myConnection.close()

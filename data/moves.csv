@@ -1,0 +1,809 @@
+move_name,move_id,accuracy,power,type,damage_class
+Pound,1,100,40,normal,Physical
+Karate Chop,2,100,50,fighting,Physical
+Double Slap,3,85,15,normal,Physical
+Comet Punch,4,85,18,normal,Physical
+Mega Punch,5,85,80,normal,Physical
+Pay Day,6,100,40,normal,Physical
+Fire Punch,7,100,75,fire,Physical
+Ice Punch,8,100,75,ice,Physical
+Thunder Punch,9,100,75,electric,Physical
+Scratch,10,100,40,normal,Physical
+Vice Grip,11,100,55,normal,Physical
+Guillotine,12,30,,normal,Physical
+Razor Wind,13,100,80,normal,Special
+Swords Dance,14,,,normal,Status
+Cut,15,95,50,normal,Physical
+Gust,16,100,40,flying,Special
+Wing Attack,17,100,60,flying,Physical
+Whirlwind,18,,,normal,Status
+Fly,19,95,90,flying,Physical
+Bind,20,85,15,normal,Physical
+Slam,21,75,80,normal,Physical
+Vine Whip,22,100,45,grass,Physical
+Stomp,23,100,65,normal,Physical
+Double Kick,24,100,30,fighting,Physical
+Mega Kick,25,75,120,normal,Physical
+Jump Kick,26,95,100,fighting,Physical
+Rolling Kick,27,85,60,fighting,Physical
+Sand Attack,28,100,,ground,Status
+Headbutt,29,100,70,normal,Physical
+Horn Attack,30,100,65,normal,Physical
+Fury Attack,31,85,15,normal,Physical
+Horn Drill,32,30,,normal,Physical
+Tackle,33,100,40,normal,Physical
+Body Slam,34,100,85,normal,Physical
+Wrap,35,90,15,normal,Physical
+Take Down,36,85,90,normal,Physical
+Thrash,37,100,120,normal,Physical
+Double Edge,38,100,120,normal,Physical
+Tail Whip,39,100,,normal,Status
+Poison Sting,40,100,15,poison,Physical
+Twineedle,41,100,25,bug,Physical
+Pin Missile,42,95,25,bug,Physical
+Leer,43,100,,normal,Status
+Bite,44,100,60,dark,Physical
+Growl,45,100,,normal,Status
+Roar,46,,,normal,Status
+Sing,47,55,,normal,Status
+Supersonic,48,55,,normal,Status
+Sonic Boom,49,90,,normal,Special
+Disable,50,100,,normal,Status
+Acid,51,100,40,poison,Special
+Ember,52,100,40,fire,Special
+Flamethrower,53,100,90,fire,Special
+Mist,54,,,ice,Status
+Water Gun,55,100,40,water,Special
+Hydro Pump,56,80,110,water,Special
+Surf,57,100,90,water,Special
+Ice Beam,58,100,90,ice,Special
+Blizzard,59,70,110,ice,Special
+Psybeam,60,100,65,psychic,Special
+Bubble Beam,61,100,65,water,Special
+Aurora Beam,62,100,65,ice,Special
+Hyper Beam,63,90,150,normal,Special
+Peck,64,100,35,flying,Physical
+Drill Peck,65,100,80,flying,Physical
+Submission,66,80,80,fighting,Physical
+Low Kick,67,100,,fighting,Physical
+Counter,68,100,,fighting,Physical
+Seismic Toss,69,100,,fighting,Physical
+Strength,70,100,80,normal,Physical
+Absorb,71,100,20,grass,Special
+Mega Drain,72,100,40,grass,Special
+Leech Seed,73,90,,grass,Status
+Growth,74,,,normal,Status
+Razor Leaf,75,95,55,grass,Physical
+Solar Beam,76,100,120,grass,Special
+Poison Powder,77,75,,poison,Status
+Stun Spore,78,75,,grass,Status
+Sleep Powder,79,75,,grass,Status
+Petal Dance,80,100,120,grass,Special
+String Shot,81,95,,bug,Status
+Dragon Rage,82,100,,dragon,Special
+Fire Spin,83,85,35,fire,Special
+Thunder Shock,84,100,40,electric,Special
+Thunderbolt,85,100,90,electric,Special
+Thunder Wave,86,90,,electric,Status
+Thunder,87,70,110,electric,Special
+Rock Throw,88,90,50,rock,Physical
+Earthquake,89,100,100,ground,Physical
+Fissure,90,30,,ground,Physical
+Dig,91,100,80,ground,Physical
+Toxic,92,90,,poison,Status
+Confusion,93,100,50,psychic,Special
+Psychic,94,100,90,psychic,Special
+Hypnosis,95,60,,psychic,Status
+Meditate,96,,,psychic,Status
+Agility,97,,,psychic,Status
+Quick Attack,98,100,40,normal,Physical
+Rage,99,100,20,normal,Physical
+Teleport,100,,,psychic,Status
+Night Shade,101,100,,ghost,Special
+Mimic,102,,,normal,Status
+Screech,103,85,,normal,Status
+Double Team,104,,,normal,Status
+Recover,105,,,normal,Status
+Harden,106,,,normal,Status
+Minimize,107,,,normal,Status
+Smokescreen,108,100,,normal,Status
+Confuse Ray,109,100,,ghost,Status
+Withdraw,110,,,water,Status
+Defense Curl,111,,,normal,Status
+Barrier,112,,,psychic,Status
+Light Screen,113,,,psychic,Status
+Haze,114,,,ice,Status
+Reflect,115,,,psychic,Status
+Focus Energy,116,,,normal,Status
+Bide,117,,,normal,Physical
+Metronome,118,,,normal,Status
+Mirror Move,119,,,flying,Status
+Self Destruct,120,100,200,normal,Physical
+Egg Bomb,121,75,100,normal,Physical
+Lick,122,100,30,ghost,Physical
+Smog,123,70,30,poison,Special
+Sludge,124,100,65,poison,Special
+Bone Club,125,85,65,ground,Physical
+Fire Blast,126,85,110,fire,Special
+Waterfall,127,100,80,water,Physical
+Clamp,128,85,35,water,Physical
+Swift,129,,60,normal,Special
+Skull Bash,130,100,130,normal,Physical
+Spike Cannon,131,100,20,normal,Physical
+Constrict,132,100,10,normal,Physical
+Amnesia,133,,,psychic,Status
+Kinesis,134,80,,psychic,Status
+Soft Boiled,135,,,normal,Status
+High Jump Kick,136,90,130,fighting,Physical
+Glare,137,100,,normal,Status
+Dream Eater,138,100,100,psychic,Special
+Poison Gas,139,90,,poison,Status
+Barrage,140,85,15,normal,Physical
+Leech Life,141,100,80,bug,Physical
+Lovely Kiss,142,75,,normal,Status
+Sky Attack,143,90,140,flying,Physical
+Transform,144,,,normal,Status
+Bubble,145,100,40,water,Special
+Dizzy Punch,146,100,70,normal,Physical
+Spore,147,100,,grass,Status
+Flash,148,100,,normal,Status
+Psywave,149,100,,psychic,Special
+Splash,150,,,normal,Status
+Acid Armor,151,,,poison,Status
+Crabhammer,152,90,100,water,Physical
+Explosion,153,100,250,normal,Physical
+Fury Swipes,154,80,18,normal,Physical
+Bonemerang,155,90,50,ground,Physical
+Rest,156,,,psychic,Status
+Rock Slide,157,90,75,rock,Physical
+Hyper Fang,158,90,80,normal,Physical
+Sharpen,159,,,normal,Status
+Conversion,160,,,normal,Status
+Tri Attack,161,100,80,normal,Special
+Super Fang,162,90,,normal,Physical
+Slash,163,100,70,normal,Physical
+Substitute,164,,,normal,Status
+Struggle,165,,50,normal,Physical
+Sketch,166,,,normal,Status
+Triple Kick,167,90,10,fighting,Physical
+Thief,168,100,60,dark,Physical
+Spider Web,169,,,bug,Status
+Mind Reader,170,,,normal,Status
+Nightmare,171,100,,ghost,Status
+Flame Wheel,172,100,60,fire,Physical
+Snore,173,100,50,normal,Special
+Curse,174,,,ghost,Status
+Flail,175,100,,normal,Physical
+Conversion 2,176,,,normal,Status
+Aeroblast,177,95,100,flying,Special
+Cotton Spore,178,100,,grass,Status
+Reversal,179,100,,fighting,Physical
+Spite,180,100,,ghost,Status
+Powder Snow,181,100,40,ice,Special
+Protect,182,,,normal,Status
+Mach Punch,183,100,40,fighting,Physical
+Scary Face,184,100,,normal,Status
+Feint Attack,185,,60,dark,Physical
+Sweet Kiss,186,75,,fairy,Status
+Belly Drum,187,,,normal,Status
+Sludge Bomb,188,100,90,poison,Special
+Mud Slap,189,100,20,ground,Special
+Octazooka,190,85,65,water,Special
+Spikes,191,,,ground,Status
+Zap Cannon,192,50,120,electric,Special
+Foresight,193,,,normal,Status
+Destiny Bond,194,,,ghost,Status
+Perish Song,195,,,normal,Status
+Icy Wind,196,95,55,ice,Special
+Detect,197,,,fighting,Status
+Bone Rush,198,90,25,ground,Physical
+Lock On,199,,,normal,Status
+Outrage,200,100,120,dragon,Physical
+Sandstorm,201,,,rock,Status
+Giga Drain,202,100,75,grass,Special
+Endure,203,,,normal,Status
+Charm,204,100,,fairy,Status
+Rollout,205,90,30,rock,Physical
+False Swipe,206,100,40,normal,Physical
+Swagger,207,85,,normal,Status
+Milk Drink,208,,,normal,Status
+Spark,209,100,65,electric,Physical
+Fury Cutter,210,95,40,bug,Physical
+Steel Wing,211,90,70,steel,Physical
+Mean Look,212,,,normal,Status
+Attract,213,100,,normal,Status
+Sleep Talk,214,,,normal,Status
+Heal Bell,215,,,normal,Status
+Return,216,100,,normal,Physical
+Present,217,90,,normal,Physical
+Frustration,218,100,,normal,Physical
+Safeguard,219,,,normal,Status
+Pain Split,220,,,normal,Status
+Sacred Fire,221,95,100,fire,Physical
+Magnitude,222,100,,ground,Physical
+Dynamic Punch,223,50,100,fighting,Physical
+Megahorn,224,85,120,bug,Physical
+Dragon Breath,225,100,60,dragon,Special
+Baton Pass,226,,,normal,Status
+Encore,227,100,,normal,Status
+Pursuit,228,100,40,dark,Physical
+Rapid Spin,229,100,50,normal,Physical
+Sweet Scent,230,100,,normal,Status
+Iron Tail,231,75,100,steel,Physical
+Metal Claw,232,95,50,steel,Physical
+Vital Throw,233,,70,fighting,Physical
+Morning Sun,234,,,normal,Status
+Synthesis,235,,,grass,Status
+Moonlight,236,,,fairy,Status
+Hidden Power,237,100,60,normal,Special
+Cross Chop,238,80,100,fighting,Physical
+Twister,239,100,40,dragon,Special
+Rain Dance,240,,,water,Status
+Sunny Day,241,,,fire,Status
+Crunch,242,100,80,dark,Physical
+Mirror Coat,243,100,,psychic,Special
+Psych Up,244,,,normal,Status
+Extreme Speed,245,100,80,normal,Physical
+Ancient Power,246,100,60,rock,Special
+Shadow Ball,247,100,80,ghost,Special
+Future Sight,248,100,120,psychic,Special
+Rock Smash,249,100,40,fighting,Physical
+Whirlpool,250,85,35,water,Special
+Beat Up,251,100,,dark,Physical
+Fake Out,252,100,40,normal,Physical
+Uproar,253,100,90,normal,Special
+Stockpile,254,,,normal,Status
+Spit Up,255,100,,normal,Special
+Swallow,256,,,normal,Status
+Heat Wave,257,90,95,fire,Special
+Hail,258,,,ice,Status
+Torment,259,100,,dark,Status
+Flatter,260,100,,dark,Status
+Will O Wisp,261,85,,fire,Status
+Memento,262,100,,dark,Status
+Facade,263,100,70,normal,Physical
+Focus Punch,264,100,150,fighting,Physical
+Smelling Salts,265,100,70,normal,Physical
+Follow Me,266,,,normal,Status
+Nature Power,267,,,normal,Status
+Charge,268,,,electric,Status
+Taunt,269,100,,dark,Status
+Helping Hand,270,,,normal,Status
+Trick,271,100,,psychic,Status
+Role Play,272,,,psychic,Status
+Wish,273,,,normal,Status
+Assist,274,,,normal,Status
+Ingrain,275,,,grass,Status
+Superpower,276,100,120,fighting,Physical
+Magic Coat,277,,,psychic,Status
+Recycle,278,,,normal,Status
+Revenge,279,100,60,fighting,Physical
+Brick Break,280,100,75,fighting,Physical
+Yawn,281,,,normal,Status
+Knock Off,282,100,65,dark,Physical
+Endeavor,283,100,,normal,Physical
+Eruption,284,100,150,fire,Special
+Skill Swap,285,,,psychic,Status
+Imprison,286,,,psychic,Status
+Refresh,287,,,normal,Status
+Grudge,288,,,ghost,Status
+Snatch,289,,,dark,Status
+Secret Power,290,100,70,normal,Physical
+Dive,291,100,80,water,Physical
+Arm Thrust,292,100,15,fighting,Physical
+Camouflage,293,,,normal,Status
+Tail Glow,294,,,bug,Status
+Luster Purge,295,100,70,psychic,Special
+Mist Ball,296,100,70,psychic,Special
+Feather Dance,297,100,,flying,Status
+Teeter Dance,298,100,,normal,Status
+Blaze Kick,299,90,85,fire,Physical
+Mud Sport,300,,,ground,Status
+Ice Ball,301,90,30,ice,Physical
+Needle Arm,302,100,60,grass,Physical
+Slack Off,303,,,normal,Status
+Hyper Voice,304,100,90,normal,Special
+Poison Fang,305,100,50,poison,Physical
+Crush Claw,306,95,75,normal,Physical
+Blast Burn,307,90,150,fire,Special
+Hydro Cannon,308,90,150,water,Special
+Meteor Mash,309,90,90,steel,Physical
+Astonish,310,100,30,ghost,Physical
+Weather Ball,311,100,50,normal,Special
+Aromatherapy,312,,,grass,Status
+Fake Tears,313,100,,dark,Status
+Air Cutter,314,95,60,flying,Special
+Overheat,315,90,130,fire,Special
+Odor Sleuth,316,,,normal,Status
+Rock Tomb,317,95,60,rock,Physical
+Silver Wind,318,100,60,bug,Special
+Metal Sound,319,85,,steel,Status
+Grass Whistle,320,55,,grass,Status
+Tickle,321,100,,normal,Status
+Cosmic Power,322,,,psychic,Status
+Water Spout,323,100,150,water,Special
+Signal Beam,324,100,75,bug,Special
+Shadow Punch,325,,60,ghost,Physical
+Extrasensory,326,100,80,psychic,Special
+Sky Uppercut,327,90,85,fighting,Physical
+Sand Tomb,328,85,35,ground,Physical
+Sheer Cold,329,30,,ice,Special
+Muddy Water,330,85,90,water,Special
+Bullet Seed,331,100,25,grass,Physical
+Aerial Ace,332,,60,flying,Physical
+Icicle Spear,333,100,25,ice,Physical
+Iron Defense,334,,,steel,Status
+Block,335,,,normal,Status
+Howl,336,,,normal,Status
+Dragon Claw,337,100,80,dragon,Physical
+Frenzy Plant,338,90,150,grass,Special
+Bulk Up,339,,,fighting,Status
+Bounce,340,85,85,flying,Physical
+Mud Shot,341,95,55,ground,Special
+Poison Tail,342,100,50,poison,Physical
+Covet,343,100,60,normal,Physical
+Volt Tackle,344,100,120,electric,Physical
+Magical Leaf,345,,60,grass,Special
+Water Sport,346,,,water,Status
+Calm Mind,347,,,psychic,Status
+Leaf Blade,348,100,90,grass,Physical
+Dragon Dance,349,,,dragon,Status
+Rock Blast,350,90,25,rock,Physical
+Shock Wave,351,,60,electric,Special
+Water Pulse,352,100,60,water,Special
+Doom Desire,353,100,140,steel,Special
+Psycho Boost,354,90,140,psychic,Special
+Roost,355,,,flying,Status
+Gravity,356,,,psychic,Status
+Miracle Eye,357,,,psychic,Status
+Wake Up Slap,358,100,70,fighting,Physical
+Hammer Arm,359,90,100,fighting,Physical
+Gyro Ball,360,100,,steel,Physical
+Healing Wish,361,,,psychic,Status
+Brine,362,100,65,water,Special
+Natural Gift,363,100,,normal,Physical
+Feint,364,100,30,normal,Physical
+Pluck,365,100,60,flying,Physical
+Tailwind,366,,,flying,Status
+Acupressure,367,,,normal,Status
+Metal Burst,368,100,,steel,Physical
+U Turn,369,100,70,bug,Physical
+Close Combat,370,100,120,fighting,Physical
+Payback,371,100,50,dark,Physical
+Assurance,372,100,60,dark,Physical
+Embargo,373,100,,dark,Status
+Fling,374,100,,dark,Physical
+Psycho Shift,375,100,,psychic,Status
+Trump Card,376,,,normal,Special
+Heal Block,377,100,,psychic,Status
+Wring Out,378,100,,normal,Special
+Power Trick,379,,,psychic,Status
+Gastro Acid,380,100,,poison,Status
+Lucky Chant,381,,,normal,Status
+Me First,382,,,normal,Status
+Copycat,383,,,normal,Status
+Power Swap,384,,,psychic,Status
+Guard Swap,385,,,psychic,Status
+Punishment,386,100,,dark,Physical
+Last Resort,387,100,140,normal,Physical
+Worry Seed,388,100,,grass,Status
+Sucker Punch,389,100,70,dark,Physical
+Toxic Spikes,390,,,poison,Status
+Heart Swap,391,,,psychic,Status
+Aqua Ring,392,,,water,Status
+Magnet Rise,393,,,electric,Status
+Flare Blitz,394,100,120,fire,Physical
+Force Palm,395,100,60,fighting,Physical
+Aura Sphere,396,,80,fighting,Special
+Rock Polish,397,,,rock,Status
+Poison Jab,398,100,80,poison,Physical
+Dark Pulse,399,100,80,dark,Special
+Night Slash,400,100,70,dark,Physical
+Aqua Tail,401,90,90,water,Physical
+Seed Bomb,402,100,80,grass,Physical
+Air Slash,403,95,75,flying,Special
+X Scissor,404,100,80,bug,Physical
+Bug Buzz,405,100,90,bug,Special
+Dragon Pulse,406,100,85,dragon,Special
+Dragon Rush,407,75,100,dragon,Physical
+Power Gem,408,100,80,rock,Special
+Drain Punch,409,100,75,fighting,Physical
+Vacuum Wave,410,100,40,fighting,Special
+Focus Blast,411,70,120,fighting,Special
+Energy Ball,412,100,90,grass,Special
+Brave Bird,413,100,120,flying,Physical
+Earth Power,414,100,90,ground,Special
+Switcheroo,415,100,,dark,Status
+Giga Impact,416,90,150,normal,Physical
+Nasty Plot,417,,,dark,Status
+Bullet Punch,418,100,40,steel,Physical
+Avalanche,419,100,60,ice,Physical
+Ice Shard,420,100,40,ice,Physical
+Shadow Claw,421,100,70,ghost,Physical
+Thunder Fang,422,95,65,electric,Physical
+Ice Fang,423,95,65,ice,Physical
+Fire Fang,424,95,65,fire,Physical
+Shadow Sneak,425,100,40,ghost,Physical
+Mud Bomb,426,85,65,ground,Special
+Psycho Cut,427,100,70,psychic,Physical
+Zen Headbutt,428,90,80,psychic,Physical
+Mirror Shot,429,85,65,steel,Special
+Flash Cannon,430,100,80,steel,Special
+Rock Climb,431,85,90,normal,Physical
+Defog,432,,,flying,Status
+Trick Room,433,,,psychic,Status
+Draco Meteor,434,90,130,dragon,Special
+Discharge,435,100,80,electric,Special
+Lava Plume,436,100,80,fire,Special
+Leaf Storm,437,90,130,grass,Special
+Power Whip,438,85,120,grass,Physical
+Rock Wrecker,439,90,150,rock,Physical
+Cross Poison,440,100,70,poison,Physical
+Gunk Shot,441,80,120,poison,Physical
+Iron Head,442,100,80,steel,Physical
+Magnet Bomb,443,,60,steel,Physical
+Stone Edge,444,80,100,rock,Physical
+Captivate,445,100,,normal,Status
+Stealth Rock,446,,,rock,Status
+Grass Knot,447,100,,grass,Special
+Chatter,448,100,65,flying,Special
+Judgment,449,100,100,normal,Special
+Bug Bite,450,100,60,bug,Physical
+Charge Beam,451,90,50,electric,Special
+Wood Hammer,452,100,120,grass,Physical
+Aqua Jet,453,100,40,water,Physical
+Attack Order,454,100,90,bug,Physical
+Defend Order,455,,,bug,Status
+Heal Order,456,,,bug,Status
+Head Smash,457,80,150,rock,Physical
+Double Hit,458,90,35,normal,Physical
+Roar Of Time,459,90,150,dragon,Special
+Spacial Rend,460,95,100,dragon,Special
+Lunar Dance,461,,,psychic,Status
+Crush Grip,462,100,,normal,Physical
+Magma Storm,463,75,100,fire,Special
+Dark Void,464,50,,dark,Status
+Seed Flare,465,85,120,grass,Special
+Ominous Wind,466,100,60,ghost,Special
+Shadow Force,467,100,120,ghost,Physical
+Hone Claws,468,,,dark,Status
+Wide Guard,469,,,rock,Status
+Guard Split,470,,,psychic,Status
+Power Split,471,,,psychic,Status
+Wonder Room,472,,,psychic,Status
+Psyshock,473,100,80,psychic,Special
+Venoshock,474,100,65,poison,Special
+Autotomize,475,,,steel,Status
+Rage Powder,476,,,bug,Status
+Telekinesis,477,,,psychic,Status
+Magic Room,478,,,psychic,Status
+Smack Down,479,100,50,rock,Physical
+Storm Throw,480,100,60,fighting,Physical
+Flame Burst,481,100,70,fire,Special
+Sludge Wave,482,100,95,poison,Special
+Quiver Dance,483,,,bug,Status
+Heavy Slam,484,100,,steel,Physical
+Synchronoise,485,100,120,psychic,Special
+Electro Ball,486,100,,electric,Special
+Soak,487,100,,water,Status
+Flame Charge,488,100,50,fire,Physical
+Coil,489,,,poison,Status
+Low Sweep,490,100,65,fighting,Physical
+Acid Spray,491,100,40,poison,Special
+Foul Play,492,100,95,dark,Physical
+Simple Beam,493,100,,normal,Status
+Entrainment,494,100,,normal,Status
+After You,495,,,normal,Status
+Round,496,100,60,normal,Special
+Echoed Voice,497,100,40,normal,Special
+Chip Away,498,100,70,normal,Physical
+Clear Smog,499,,50,poison,Special
+Stored Power,500,100,20,psychic,Special
+Quick Guard,501,,,fighting,Status
+Ally Switch,502,,,psychic,Status
+Scald,503,100,80,water,Special
+Shell Smash,504,,,normal,Status
+Heal Pulse,505,,,psychic,Status
+Hex,506,100,65,ghost,Special
+Sky Drop,507,100,60,flying,Physical
+Shift Gear,508,,,steel,Status
+Circle Throw,509,90,60,fighting,Physical
+Incinerate,510,100,60,fire,Special
+Quash,511,100,,dark,Status
+Acrobatics,512,100,55,flying,Physical
+Reflect Type,513,,,normal,Status
+Retaliate,514,100,70,normal,Physical
+Final Gambit,515,100,,fighting,Special
+Bestow,516,,,normal,Status
+Inferno,517,50,100,fire,Special
+Water Pledge,518,100,80,water,Special
+Fire Pledge,519,100,80,fire,Special
+Grass Pledge,520,100,80,grass,Special
+Volt Switch,521,100,70,electric,Special
+Struggle Bug,522,100,50,bug,Special
+Bulldoze,523,100,60,ground,Physical
+Frost Breath,524,90,60,ice,Special
+Dragon Tail,525,90,60,dragon,Physical
+Work Up,526,,,normal,Status
+Electroweb,527,95,55,electric,Special
+Wild Charge,528,100,90,electric,Physical
+Drill Run,529,95,80,ground,Physical
+Dual Chop,530,90,40,dragon,Physical
+Heart Stamp,531,100,60,psychic,Physical
+Horn Leech,532,100,75,grass,Physical
+Sacred Sword,533,100,90,fighting,Physical
+Razor Shell,534,95,75,water,Physical
+Heat Crash,535,100,,fire,Physical
+Leaf Tornado,536,90,65,grass,Special
+Steamroller,537,100,65,bug,Physical
+Cotton Guard,538,,,grass,Status
+Night Daze,539,95,85,dark,Special
+Psystrike,540,100,100,psychic,Special
+Tail Slap,541,85,25,normal,Physical
+Hurricane,542,70,110,flying,Special
+Head Charge,543,100,120,normal,Physical
+Gear Grind,544,85,50,steel,Physical
+Searing Shot,545,100,100,fire,Special
+Techno Blast,546,100,120,normal,Special
+Relic Song,547,100,75,normal,Special
+Secret Sword,548,100,85,fighting,Special
+Glaciate,549,95,65,ice,Special
+Bolt Strike,550,85,130,electric,Physical
+Blue Flare,551,85,130,fire,Special
+Fiery Dance,552,100,80,fire,Special
+Freeze Shock,553,90,140,ice,Physical
+Ice Burn,554,90,140,ice,Special
+Snarl,555,95,55,dark,Special
+Icicle Crash,556,90,85,ice,Physical
+V Create,557,95,180,fire,Physical
+Fusion Flare,558,100,100,fire,Special
+Fusion Bolt,559,100,100,electric,Physical
+Flying Press,560,95,100,fighting,Physical
+Mat Block,561,,,fighting,Status
+Belch,562,90,120,poison,Special
+Rototiller,563,,,ground,Status
+Sticky Web,564,,,bug,Status
+Fell Stinger,565,100,50,bug,Physical
+Phantom Force,566,100,90,ghost,Physical
+Trick Or Treat,567,100,,ghost,Status
+Noble Roar,568,100,,normal,Status
+Ion Deluge,569,,,electric,Status
+Parabolic Charge,570,100,65,electric,Special
+Forests Curse,571,100,,grass,Status
+Petal Blizzard,572,100,90,grass,Physical
+Freeze Dry,573,100,70,ice,Special
+Disarming Voice,574,,40,fairy,Special
+Parting Shot,575,100,,dark,Status
+Topsy Turvy,576,,,dark,Status
+Draining Kiss,577,100,50,fairy,Special
+Crafty Shield,578,,,fairy,Status
+Flower Shield,579,,,fairy,Status
+Grassy Terrain,580,,,grass,Status
+Misty Terrain,581,,,fairy,Status
+Electrify,582,,,electric,Status
+Play Rough,583,90,90,fairy,Physical
+Fairy Wind,584,100,40,fairy,Special
+Moonblast,585,100,95,fairy,Special
+Boomburst,586,100,140,normal,Special
+Fairy Lock,587,,,fairy,Status
+Kings Shield,588,,,steel,Status
+Play Nice,589,,,normal,Status
+Confide,590,,,normal,Status
+Diamond Storm,591,95,100,rock,Physical
+Steam Eruption,592,95,110,water,Special
+Hyperspace Hole,593,,80,psychic,Special
+Water Shuriken,594,100,15,water,Special
+Mystical Fire,595,100,75,fire,Special
+Spiky Shield,596,,,grass,Status
+Aromatic Mist,597,,,fairy,Status
+Eerie Impulse,598,100,,electric,Status
+Venom Drench,599,100,,poison,Status
+Powder,600,100,,bug,Status
+Geomancy,601,,,fairy,Status
+Magnetic Flux,602,,,electric,Status
+Happy Hour,603,,,normal,Status
+Electric Terrain,604,,,electric,Status
+Dazzling Gleam,605,100,80,fairy,Special
+Celebrate,606,,,normal,Status
+Hold Hands,607,,,normal,Status
+Baby Doll Eyes,608,100,,fairy,Status
+Nuzzle,609,100,20,electric,Physical
+Hold Back,610,100,40,normal,Physical
+Infestation,611,100,20,bug,Special
+Power Up Punch,612,100,40,fighting,Physical
+Oblivion Wing,613,100,80,flying,Special
+Thousand Arrows,614,100,90,ground,Physical
+Thousand Waves,615,100,90,ground,Physical
+Lands Wrath,616,100,90,ground,Physical
+Light Of Ruin,617,90,140,fairy,Special
+Origin Pulse,618,85,110,water,Special
+Precipice Blades,619,85,120,ground,Physical
+Dragon Ascent,620,100,120,flying,Physical
+Hyperspace Fury,621,,100,dark,Physical
+Breakneck Blitz  Physical,622,,,normal,Physical
+Breakneck Blitz  Special,623,,,normal,Special
+All Out Pummeling  Physical,624,,,fighting,Physical
+All Out Pummeling  Special,625,,,fighting,Special
+Supersonic Skystrike  Physical,626,,,flying,Physical
+Supersonic Skystrike  Special,627,,,flying,Special
+Acid Downpour  Physical,628,,,poison,Physical
+Acid Downpour  Special,629,,,poison,Special
+Tectonic Rage  Physical,630,,,ground,Physical
+Tectonic Rage  Special,631,,,ground,Special
+Continental Crush  Physical,632,,,rock,Physical
+Continental Crush  Special,633,,,rock,Special
+Savage Spin Out  Physical,634,,,bug,Physical
+Savage Spin Out  Special,635,,,bug,Special
+Never Ending Nightmare  Physical,636,,,ghost,Physical
+Never Ending Nightmare  Special,637,,,ghost,Special
+Corkscrew Crash  Physical,638,,,steel,Physical
+Corkscrew Crash  Special,639,,,steel,Special
+Inferno Overdrive  Physical,640,,,fire,Physical
+Inferno Overdrive  Special,641,,,fire,Special
+Hydro Vortex  Physical,642,,,water,Physical
+Hydro Vortex  Special,643,,,water,Special
+Bloom Doom  Physical,644,,,grass,Physical
+Bloom Doom  Special,645,,,grass,Special
+Gigavolt Havoc  Physical,646,,,electric,Physical
+Gigavolt Havoc  Special,647,,,electric,Special
+Shattered Psyche  Physical,648,,,psychic,Physical
+Shattered Psyche  Special,649,,,psychic,Special
+Subzero Slammer  Physical,650,,,ice,Physical
+Subzero Slammer  Special,651,,,ice,Special
+Devastating Drake  Physical,652,,,dragon,Physical
+Devastating Drake  Special,653,,,dragon,Special
+Black Hole Eclipse  Physical,654,,,dark,Physical
+Black Hole Eclipse  Special,655,,,dark,Special
+Twinkle Tackle  Physical,656,,,fairy,Physical
+Twinkle Tackle  Special,657,,,fairy,Special
+Catastropika,658,,210,electric,Physical
+Shore Up,659,,,ground,Status
+First Impression,660,100,90,bug,Physical
+Baneful Bunker,661,,,poison,Status
+Spirit Shackle,662,100,80,ghost,Physical
+Darkest Lariat,663,100,85,dark,Physical
+Sparkling Aria,664,100,90,water,Special
+Ice Hammer,665,90,100,ice,Physical
+Floral Healing,666,,,fairy,Status
+High Horsepower,667,95,95,ground,Physical
+Strength Sap,668,100,,grass,Status
+Solar Blade,669,100,125,grass,Physical
+Leafage,670,100,40,grass,Physical
+Spotlight,671,,,normal,Status
+Toxic Thread,672,100,,poison,Status
+Laser Focus,673,,,normal,Status
+Gear Up,674,,,steel,Status
+Throat Chop,675,100,80,dark,Physical
+Pollen Puff,676,100,90,bug,Special
+Anchor Shot,677,100,80,steel,Physical
+Psychic Terrain,678,,,psychic,Status
+Lunge,679,100,80,bug,Physical
+Fire Lash,680,100,80,fire,Physical
+Power Trip,681,100,20,dark,Physical
+Burn Up,682,100,130,fire,Special
+Speed Swap,683,,,psychic,Status
+Smart Strike,684,,70,steel,Physical
+Purify,685,,,poison,Status
+Revelation Dance,686,100,90,normal,Special
+Core Enforcer,687,100,100,dragon,Special
+Trop Kick,688,100,70,grass,Physical
+Instruct,689,,,psychic,Status
+Beak Blast,690,100,100,flying,Physical
+Clanging Scales,691,100,110,dragon,Special
+Dragon Hammer,692,100,90,dragon,Physical
+Brutal Swing,693,100,60,dark,Physical
+Aurora Veil,694,,,ice,Status
+Sinister Arrow Raid,695,,180,ghost,Physical
+Malicious Moonsault,696,,180,dark,Physical
+Oceanic Operetta,697,,195,water,Special
+Guardian Of Alola,698,,,fairy,Special
+Soul Stealing 7 Star Strike,699,,195,ghost,Physical
+Stoked Sparksurfer,700,,175,electric,Special
+Pulverizing Pancake,701,,210,normal,Physical
+Extreme Evoboost,702,,,normal,Status
+Genesis Supernova,703,,185,psychic,Special
+Shell Trap,704,100,150,fire,Special
+Fleur Cannon,705,90,130,fairy,Special
+Psychic Fangs,706,100,85,psychic,Physical
+Stomping Tantrum,707,100,75,ground,Physical
+Shadow Bone,708,100,85,ghost,Physical
+Accelerock,709,100,40,rock,Physical
+Liquidation,710,100,85,water,Physical
+Prismatic Laser,711,100,160,psychic,Special
+Spectral Thief,712,100,90,ghost,Physical
+Sunsteel Strike,713,100,100,steel,Physical
+Moongeist Beam,714,100,100,ghost,Special
+Tearful Look,715,,,normal,Status
+Zing Zap,716,100,80,electric,Physical
+Natures Madness,717,90,,fairy,Special
+Multi Attack,718,100,120,normal,Physical
+10 000 000 Volt Thunderbolt,719,,195,electric,Special
+Mind Blown,720,100,150,fire,Special
+Plasma Fists,721,100,100,electric,Physical
+Photon Geyser,722,100,100,psychic,Special
+Light That Burns The Sky,723,,200,psychic,Special
+Searing Sunraze Smash,724,,200,steel,Physical
+Menacing Moonraze Maelstrom,725,,200,ghost,Special
+Lets Snuggle Forever,726,,190,fairy,Physical
+Splintered Stormshards,727,,190,rock,Physical
+Clangorous Soulblaze,728,,185,dragon,Special
+Zippy Zap,729,100,80,electric,Physical
+Splishy Splash,730,100,90,water,Special
+Floaty Fall,731,95,90,flying,Physical
+Pika Papow,732,,,electric,Special
+Bouncy Bubble,733,100,60,water,Special
+Buzzy Buzz,734,100,60,electric,Special
+Sizzly Slide,735,100,60,fire,Physical
+Glitzy Glow,736,95,80,psychic,Special
+Baddy Bad,737,95,80,dark,Special
+Sappy Seed,738,90,100,grass,Physical
+Freezy Frost,739,90,100,ice,Special
+Sparkly Swirl,740,85,120,fairy,Special
+Veevee Volley,741,,,normal,Physical
+Double Iron Bash,742,100,60,steel,Physical
+Max Guard,743,,,normal,Status
+Dynamax Cannon,744,100,100,dragon,Special
+Snipe Shot,745,100,80,water,Special
+Jaw Lock,746,100,80,dark,Physical
+Stuff Cheeks,747,,,normal,Status
+No Retreat,748,,,fighting,Status
+Max Flare,757,,100,fire,Physical
+Max Flutterby,758,,10,bug,Physical
+Max Lightning,759,,10,electric,Physical
+Max Strike,760,,10,normal,Physical
+Max Knuckle,761,,10,fighting,Physical
+Max Phantasm,762,,10,ghost,Physical
+Max Hailstorm,763,,10,ice,Physical
+Max Ooze,764,,10,poison,Physical
+Max Geyser,765,,10,water,Physical
+Max Airstream,766,,10,flying,Physical
+Max Starfall,767,,10,fairy,Physical
+Max Wyrmwind,768,,10,dragon,Physical
+Max Mindstorm,769,,10,psychic,Physical
+Max Rockfall,770,,10,rock,Physical
+Max Quake,771,,10,ground,Physical
+Max Darkness,772,,10,dark,Physical
+Max Overgrowth,773,,10,grass,Physical
+Max Steelspike,774,,10,steel,Physical
+Drum Beating,778,100,80,grass,Physical
+Snap Trap,779,100,35,grass,Physical
+Pyro Ball,780,90,120,fire,Physical
+Breaking Swipe,784,100,60,dragon,Physical
+Branch Poke,785,100,40,grass,Physical
+Grav Apple,788,100,80,grass,Physical
+Spirit Break,789,100,75,fairy,Physical
+Strange Steam,790,95,90,fairy,Special
+False Surrender,793,,80,dark,Physical
+Meteor Assault,794,100,150,fighting,Physical
+Eternabeam,795,90,160,dragon,Special
+Steel Beam,796,95,140,steel,Special
+Expanding Force,797,100,80,psychic,Special
+Steel Roller,798,100,130,steel,Physical
+Scale Shot,799,90,25,dragon,Physical
+Meteor Beam,800,90,120,rock,Special
+Shell Side Arm,801,100,90,poison,Special
+Misty Explosion,802,100,100,fairy,Special
+Grassy Glide,803,100,70,grass,Physical
+Rising Voltage,804,100,70,electric,Special
+Terrain Pulse,805,100,50,normal,Special
+Skitter Smack,806,90,70,bug,Physical
+Burning Jealousy,807,100,70,fire,Special
+Lash Out,808,100,75,dark,Physical
+Poltergeist,809,90,110,ghost,Physical
+Corrosive Gas,810,100,,poison,Status
+Coaching,811,,,fighting,Status
+Flip Turn,812,100,60,water,Physical
+Triple Axel,813,90,20,ice,Physical
+Dual Wingbeat,814,90,40,flying,Physical
+Scorching Sands,815,100,70,ground,Special
+Jungle Healing,816,,,grass,Status
+Wicked Blow,817,100,80,dark,Physical
+Surging Strikes,818,100,25,water,Physical
+Thunder Cage,819,90,80,electric,Special
+Dragon Energy,820,100,150,dragon,Special
+Freezing Glare,821,100,90,psychic,Special
+Fiery Wrath,822,100,90,dark,Special
+Thunderous Kick,823,100,90,fighting,Physical
+Glacial Lance,824,100,130,ice,Physical
+Astral Barrage,825,100,120,ghost,Special
+Eerie Spell,826,100,80,psychic,Special

@@ -19,7 +19,7 @@ class Base(DeclarativeBase):
 app = Flask(__name__)
 
 #ModuleNotFoundError: No module named 'MySQLdb'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Thisistp.4j!@localhost/Pokemon"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:password@localhost/Pokemon"
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 

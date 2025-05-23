@@ -12,19 +12,15 @@
     <h2>Pokemon</h2>
     <a href="/"  class="btn btn-outline-secondary my-2">Back to index</a>
 
-    <div class="py-2"> Show a list of Pokemon with the move 
-        <select name=moves method="GET" action="/">
-        {% for each in form %}
-        <option value={{each}}></option>
-        {% endfor %}
-        </select>
+    <div class="py-2"> 
+        Show a list of Pokemon with the move
+        <form action="" method="POST" name="Moves" class="py-2">
+            {{form.user()}}
+            <input type="submit" value="Go">
+        </form>
+        Value: {{value}}
     </div>
 
-    <!-- <form method="POST" action="/">
-    {{ form.csrf_token }}
-    {{ form.name.label }} {{ form.name(size=20) }}
-    <input type="submit" value="Go">
-    </form> -->
 
     <div class="links">
         <a href="/pokemon" class="btn btn-primary">Pokemon</a>

@@ -9,7 +9,7 @@ def convert_to_none(val):
 # Connects to the pokemon databse, change to your password
 myConnection = mysql.connector.connect(
     user = 'root',
-    password = <yourpassword>,
+    password = 'hamsterdog',
     host = 'localhost',
     database = 'Pokemon'
 )

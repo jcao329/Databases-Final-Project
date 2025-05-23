@@ -1,4 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+from wtforms import Form, SelectField, StringField, SubmitField
+from wtforms.validators import DataRequired
+
+class SimpleForm(Form):
+    user = SelectField('User', choices=[(1, 'Admin'), (2, 'Regular')])
+    submit = SubmitField('Go')
+
+
+class MyForm(Form):
+    name = StringField('name', validators=[DataRequired()])
 
 app = Flask(__name__)
 
@@ -8,7 +18,8 @@ def index():
 
 @app.route("/pokemon")
 def pokemon():
-    return render_template('pokemon.html')
+    form = SimpleForm(request.form)
+    return render_template('pokemon.html', form=form)
 
 @app.route("/newtrainer")
 def newtrainer():

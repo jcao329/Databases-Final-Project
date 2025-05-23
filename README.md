@@ -5,14 +5,14 @@
 All packages needed to run the app will be in 'requirements.txt'
 You can start a virtual environment by running the commands: 
 
-python -m venv .venv
-source .venv/bin/activate
+python -m venv .venv \n
+source .venv/bin/activate \n
 pip install -r 'requirements.txt'
 
 To deactivate: 'deactivate' in the command line 
 
 ## Run app 
-We will be using a Flask app. To run the app, run the script 'app.py' 
+We will be using a Flask app. To run the app, run the script 'app.py'
 
 ## Pages 
 ### New Trainer
@@ -26,3 +26,6 @@ Explore queries about teams
 
 ### Trainers
 Explore queries about trainers
+
+## Connect to Database
+At the top of the file, import db from data_connector. Then to execute queries, reference: https://flask-sqlalchemy.readthedocs.io/en/stable/queries/. 

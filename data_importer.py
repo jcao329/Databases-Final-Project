@@ -9,7 +9,7 @@ def convert_to_none(val):
 # Connects to the pokemon databse, change to your password
 myConnection = mysql.connector.connect(
     user = 'root',
-    password = 'hamsterdog',
+    password = <yourpassword>,
     host = 'localhost',
     database = 'Pokemon'
 )
@@ -23,6 +23,8 @@ try:
     regions = pd.read_csv('data/regions.csv')
     trainers = pd.read_csv('data/trainers.csv')
     trainer_pokemon = pd.read_csv('data/trainer_pokemon.csv')
+    teams = pd.read_csv('data/teams.csv')
+    print(teams.head())
 except Exception as e:
     print("Cannot load files:", e)
     exit(1)
@@ -99,6 +101,14 @@ CREATE TABLE IF NOT EXISTS trainer_pokemon (
     trainer_ID INT,
     pokemon_name VARCHAR(50),
     FOREIGN KEY (trainer_ID) REFERENCES trainers(trainer_ID)
+);
+""")
+
+cursorObject.execute("""
+CREATE TABLE IF NOT EXISTS teams (
+	team_id INT,
+	team_name VARCHAR(20),
+	region_id INT
 );
 """)
 
@@ -188,6 +198,13 @@ for _, row in trainer_pokemon.iterrows():
     cursorObject.execute(
         "INSERT INTO trainer_pokemon (trainer_ID, pokemon_name) VALUES (%s, %s);",
         (convert_to_none(row['trainer_ID']), convert_to_none(row['pokemon_name']))
+    )
+
+teams['team_name'] = teams['team_name'].str.strip()
+for _, row in teams.iterrows():
+    cursorObject.execute(
+        "INSERT into TEAMS (team_id, team_name, region_id) VALUES (%s, %s, %s);", 
+        (convert_to_none(row['team_id']), convert_to_none(row['team_name']), convert_to_none(row['region_id']))
     )
 myConnection.commit()
 

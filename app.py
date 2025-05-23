@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request
 from wtforms import Form, SelectField, StringField, SubmitField
 from wtforms.validators import DataRequired
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase
+
 
 class SimpleForm(Form):
     user = SelectField('User', choices=[(1, 'Admin'), (2, 'Regular')])
@@ -10,7 +13,15 @@ class SimpleForm(Form):
 class MyForm(Form):
     name = StringField('name', validators=[DataRequired()])
 
+class Base(DeclarativeBase):
+  pass
+
 app = Flask(__name__)
+
+#ModuleNotFoundError: No module named 'MySQLdb'
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Thisistp.4j!@localhost/Pokemon"
+db = SQLAlchemy(model_class=Base)
+db.init_app(app)
 
 @app.route("/")
 def index():

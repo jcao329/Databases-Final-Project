@@ -1,3 +1,4 @@
 flask
 pandas
-mysql.connector
+mysql-connector-python
+Flask-SQLAlchemy

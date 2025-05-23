@@ -8,16 +8,16 @@ class Base(DeclarativeBase):
   pass
 
 
-#ModuleNotFoundError: No module named 'MySQLdb'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:password@localhost/Pokemon"
-db = SQLAlchemy(model_class=Base)
-db.init_app(app)
-
 class SimpleForm(Form):
     user = SelectField('User', choices=[('Blank', ''), ('Admin', 'Admin'), ('Regular', 'Regular')])
     submit = SubmitField('Go')
 
+
 app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:password@localhost/Pokemon"
+db = SQLAlchemy(model_class=Base)
+db.init_app(app)
 
 @app.route("/")
 def index():

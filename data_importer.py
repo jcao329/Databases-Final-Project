@@ -24,7 +24,7 @@ try:
     trainers = pd.read_csv('data/trainers.csv')
     trainer_pokemon = pd.read_csv('data/trainer_pokemon.csv')
     teams = pd.read_csv('data/teams.csv')
-    print(teams.head())
+    pokemon_moves = pd.read_csv('data/pokemon_moves.csv')
 except Exception as e:
     print("Cannot load files:", e)
     exit(1)
@@ -109,6 +109,13 @@ CREATE TABLE IF NOT EXISTS teams (
 	team_id INT,
 	team_name VARCHAR(20),
 	region_id INT
+);
+""")
+
+cursorObject.execute("""
+CREATE TABLE IF NOT EXISTS pokemon_moves (
+	move_id INT,
+	pokemon_id INT
 );
 """)
 
@@ -203,9 +210,16 @@ for _, row in trainer_pokemon.iterrows():
 teams['team_name'] = teams['team_name'].str.strip()
 for _, row in teams.iterrows():
     cursorObject.execute(
-        "INSERT into TEAMS (team_id, team_name, region_id) VALUES (%s, %s, %s);", 
+        "INSERT INTO teams (team_id, team_name, region_id) VALUES (%s, %s, %s);", 
         (convert_to_none(row['team_id']), convert_to_none(row['team_name']), convert_to_none(row['region_id']))
     )
+
+for _, row in pokemon_moves.iterrows():
+    cursorObject.execute(
+        "INSERT INTO pokemon_moves (move_id, pokemon_id) VALUES (%s, %s);", 
+        (int(row['move_id']), int(row['pokemon_id']))
+    )
+
 myConnection.commit()
 
 # Closes connections

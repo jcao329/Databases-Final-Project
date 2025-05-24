@@ -1,15 +1,10 @@
 from flask import Flask, render_template, request
 from wtforms import Form, SelectField, StringField, SubmitField
 from wtforms.validators import DataRequired
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
 from load_data import POKEMON, MOVES, ABILITIES, TYPES, REGIONS, TEAMS, TRAINERS
 import pandas as pd
 import pymysql
 import os
-
-class Base(DeclarativeBase):
-  pass
 
 
 class MovesForm(Form):
@@ -54,7 +49,7 @@ def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-u
     return pymysql.connect(
         host='localhost',
         user='root',
-        password=os.environ["MYSQL_DB_PWD"], # MODIFY FOR YOUR PASSWORD
+        password = os.environ["MYSQL_DB_PWD"], # MODIFY FOR YOUR PASSWORD
         db='Pokemon',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -62,9 +57,6 @@ def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-u
 app = Flask(__name__)
 # app.secret_key = 'dev_pokemon_secret_1234'
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:password@localhost/Pokemon"
-db = SQLAlchemy(model_class=Base)
-db.init_app(app)
 
 @app.route("/")
 def index():
@@ -82,13 +74,49 @@ def pokemon():
     type1 = 'no type1'
     region = 'no region'
 
-    df = pd.read_csv('data/pokemon.csv')
 
+    df = pd.read_csv('data/pokemon.csv')
+    
     if request.method == 'POST':
         move = moves.moves.data
         ability = abilities.abilities.data
         type1 = types1.types.data
         region = regions.regions.data
+        connection = get_pymysql_connection()
+
+        if all(x == 'Blank' for x in [move, ability, type1, region]):
+                    render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
+                           ability=ability, type1=type1, region=region, move=move, tables=[df.to_html(header="true")])
+
+        try: 
+            with connection.cursor() as cursor:
+                sql = """SELECT DISTINCT p.pokemon_name, r.region_name, p.is_legendary, p.type1 \
+                        FROM pokemon p \
+                        JOIN pokemon_moves pm ON p.pokemon_id = pm.pokemon_id \
+                        JOIN moves m ON m.move_id = pm.move_id\
+                        JOIN pokemon_abilities pa ON p.pokemon_id = pa.pokemon_id \
+                        JOIN regions r ON p.region_id = r.region_id \
+                        WHERE 1=1"""
+                
+                params = []
+                if move != 'Blank':
+                    sql += " AND m.move_name = %s"
+                    params.append(move)
+                if ability != 'Blank':
+                    sql += " AND pa.ability = %s"
+                    params.append(ability)
+                if type1 != 'Blank':
+                    sql += " AND p.type1 = %s"
+                    params.append(type1)
+                if region != 'Blank':
+                    sql += " AND r.region_name = %s"
+                    params.append(region)
+                
+                cursor.execute(sql, params)
+                results = cursor.fetchall()
+                df = pd.DataFrame(results)
+        finally:
+            connection.close()
 
     return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
                            ability=ability, type1=type1, region=region, move=move, tables=[df.to_html(header="true")])
@@ -104,7 +132,7 @@ def newtrainer():
         connection = get_pymysql_connection()
         
         try:
-            with connection.cursor() as cursor: 
+            with connection.cursor() as cursor:
                 cursor.execute("SELECT MAX(trainer_ID) as max_id FROM trainers;") # IF NULL (should never be the case) set to 0 
                 
                 max_id = cursor.fetchone()["max_id"]

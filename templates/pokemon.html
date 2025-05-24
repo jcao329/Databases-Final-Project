@@ -9,57 +9,69 @@
 </head>
 <body>
     <div class="container text-align-center my-4">
-    <h2>Pokemon</h2>
-    <a href="/"  class="btn btn-outline-secondary my-2">Back to index</a>
+        <div class="row">
+            <div class="col-5">
+                <h2>Pokemon</h2>
+                <a href="/"  class="btn btn-outline-secondary my-2">Back to index</a>
 
-    <div class="py-2"> 
-        Show a list of Pokemon with
-        <form action="" method="POST" name="Moves" class="py-2">
-            <div class="row mb-2">
-                <div class="col-sm-1">
-                    Moves
+                <div class="py-2"> 
+                    Show a list of Pokemon with
+                    <form action="" method="POST" name="Moves" class="py-2">
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Moves
+                            </div>
+                            <div class="col-sm-2">
+                            {{moves.moves()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Ability
+                            </div>
+                            <div class="col-sm-2">
+                                {{abilities.abilities()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Type
+                            </div>
+                            <div class="col-sm-2">
+                                {{types1.types()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                From
+                            </div>
+                            <div class="col-sm-2">
+                                {{regions.regions()}}
+                            </div>
+                        </div>
+                        <input type="submit" value="Search">
+                    </form>
+                    Values: {{move}} {{ability}} {{type1}} {{type2}} {{region}}
                 </div>
-                <div class="col-sm-1">
-                {{moves.moves()}}
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-1">
-                    Ability
-                </div>
-                <div class="col-sm-1">
-                    {{abilities.abilities()}}
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-1">
-                    Type
-                </div>
-                <div class="col-sm-1">
-                    {{types1.types()}}
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-1">
-                    From
-                </div>
-                <div class="col-sm-1">
-                    {{regions.regions()}}
-                </div>
-            </div>
-            <input type="submit" value="Search">
-        </form>
-        Values: {{move}} {{ability}} {{type1}} {{type2}} {{region}}
-    </div>
 
 
-    <div class="links">
-        <a href="/pokemon" class="btn btn-primary">Pokemon</a>
-        <a href="/trainers" class="btn btn-primary">Trainers</a>
-        <a href="/teams" class="btn btn-primary">Teams</a>
-        <a href="/newtrainer" class="btn btn-primary">Make your own trainer</a>
+                <div class="links">
+                    <a href="/pokemon" class="btn btn-primary">Pokemon</a>
+                    <a href="/trainers" class="btn btn-primary">Trainers</a>
+                    <a href="/teams" class="btn btn-primary">Teams</a>
+                    <a href="/newtrainer" class="btn btn-primary">Make your own trainer</a>
+                </div>
+            </div>
+
+            <div class="col-6">
+                {% for table in tables %}
+                    {{ table|safe }}
+                {% endfor %}
+            </div>
+
     </div>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 </body>
 </html>

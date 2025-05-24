@@ -4,6 +4,7 @@ from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from load_data import POKEMON, MOVES, ABILITIES, TYPES, REGIONS, TEAMS, TRAINERS
+import pandas as pd
 
 class Base(DeclarativeBase):
   pass
@@ -56,6 +57,8 @@ def pokemon():
     type1 = 'no type1'
     region = 'no region'
 
+    df = pd.read_csv('data/pokemon.csv')
+
     if request.method == 'POST':
         move = moves.moves.data
         ability = abilities.abilities.data
@@ -63,7 +66,7 @@ def pokemon():
         region = regions.regions.data
 
     return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
-                           ability=ability, type1=type1, region=region, move=move)
+                           ability=ability, type1=type1, region=region, move=move, tables=[df.to_html(header="true")])
 
 @app.route("/newtrainer")
 def newtrainer():

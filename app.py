@@ -3,15 +3,36 @@ from wtforms import Form, SelectField, StringField, SubmitField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
+from load_data import POKEMON, MOVES, ABILITIES, TYPES, REGIONS, TEAMS, TRAINERS
 
 class Base(DeclarativeBase):
   pass
 
 
-class SimpleForm(Form):
-    user = SelectField('User', choices=[('Blank', ''), ('Admin', 'Admin'), ('Regular', 'Regular')])
+class MovesForm(Form):
+    moves = [('Blank', '')]
+    for move in MOVES:
+        moves.append((move, move))
+    moves = SelectField('Moves', choices=moves)
     submit = SubmitField('Go')
 
+class AbilitiesForm(Form):
+    abilities = [('Blank', '')]
+    for a in ABILITIES:
+        abilities.append((a, a))
+    abilities = SelectField('Abilities', choices=abilities)
+
+class TypesForm(Form):
+    types = [('Blank', '')]
+    for t in TYPES:
+        types.append((t, t))
+    types = SelectField('Types', choices=types)
+
+class RegionsForm(Form):
+    regs = [('Blank', '')]
+    for r in REGIONS:
+        regs.append((r, r))
+    regions = SelectField('Regions', choices=regs)
 
 app = Flask(__name__)
 
@@ -25,11 +46,27 @@ def index():
 
 @app.route("/pokemon", methods=['GET', 'POST'])
 def pokemon():
-    form = SimpleForm(request.form)
-    value = 'nothing'
+    moves = MovesForm(request.form)
+    abilities = AbilitiesForm(request.form)
+    types1 = TypesForm(request.form)
+    types2 = TypesForm(request.form)
+    regions = RegionsForm(request.form)
+
+    move = 'no move'
+    ability = 'no ability'
+    type1 = 'no type1'
+    type2 = 'no type2'
+    region = 'no region'
+
     if request.method == 'POST':
-        value = form.user.data
-    return render_template('pokemon.html', form=form, value=value)
+        move = moves.moves.data
+        ability = abilities.abilities.data
+        type1 = types1.types.data
+        type2 = types2.types.data
+        region = regions.regions.data
+
+    return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, types2=types2, regions=regions, 
+                           ability=ability, type1=type1, type2=type2, region=region, move=move)
 
 @app.route("/newtrainer")
 def newtrainer():

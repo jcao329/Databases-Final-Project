@@ -3,9 +3,11 @@ from flask import Flask, render_template, request, url_for, redirect
 import pandas as pd
 import mysql.connector
 
+#Run queries and convert to dataframes for display 
+
 myConnection = mysql.connector.connect(
     user = 'root',
-    password = 'Thisistp.4j!',
+    password = 'password',
     host = 'localhost',
     database = 'Pokemon'
 )

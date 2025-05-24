@@ -26,6 +26,3 @@ Explore queries about teams
 
 ### Trainers
 Explore queries about trainers
-
-## Connect to Database
-At the top of the file, import db from data_connector. Then to execute queries, reference: https://flask-sqlalchemy.readthedocs.io/en/stable/queries/. 

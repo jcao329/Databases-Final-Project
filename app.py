@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from load_data import POKEMON, MOVES, ABILITIES, TYPES, REGIONS, TEAMS, TRAINERS
 import pandas as pd
+import pymysql
+import os
 
 class Base(DeclarativeBase):
   pass
@@ -42,7 +44,15 @@ class PokemonsForm(Form):
         pmons.append((p, p))
     pokemons = SelectField('Regions', choices=pmons)
 
-    
+
+def get_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-using-pymysql-in-python/
+    return pymysql.connect(
+        host='localhost',
+        user='root',
+        password="your password here",
+        db='Pokemon',
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
 app = Flask(__name__)
 
@@ -81,7 +91,7 @@ def pokemon():
 def newtrainer():
     return render_template('newtrainer.html')
 
-@app.route("/trainers")
+@app.route("/trainers", methods=["GET", "POST"])
 def trainers():
     pokemons = PokemonsForm(request.form)
 
@@ -89,8 +99,22 @@ def trainers():
 
     df = pd.read_csv('data/trainers.csv')
 
-    if request.method == 'POST':
-        pokemon = pokemons.moves.data
+    if request.method == 'POST' and pokemons.validate():
+        pokemon = pokemons.pokemons.data
+        connection = get_connection()
+        try:
+            with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+                sql = """
+                SELECT t.trainer_ID, t.trainer_name
+                FROM trainers as t
+                JOIN trainer_pokemon as tp ON t.trainer_ID = tp.trainer_id
+                WHERE tp.pokemon_name = %s
+                """
+                cursor.execute(sql, (pokemon,))
+                results = cursor.fetchall()
+                df = pd.DataFrame(results)
+        finally:
+            connection.close()
 
     return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, tables=[df.to_html(header="true")])
 

@@ -91,6 +91,14 @@ def pokemon():
 def newtrainer():
     return render_template('newtrainer.html')
 
+def style_df(df):
+    styled_df = df.style.set_table_styles([
+        {'selector': 'th', 'props': [('text-align', 'center'), ('padding', '5px'), ('border', '1px solid black')]}, # Header
+        {'selector': 'td', 'props': [('text-align', 'center'), ('padding', '5px'), ('border', '1px solid black')]}, # Data
+    ])
+    
+    return styled_df
+
 @app.route("/trainers", methods=["GET", "POST"])
 def trainers():
     pokemons = PokemonsForm(request.form)
@@ -102,21 +110,26 @@ def trainers():
     if request.method == 'POST' and pokemons.validate():
         pokemon = pokemons.pokemons.data
         connection = get_connection()
-        try:
-            with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
-                sql = """
-                SELECT t.trainer_ID, t.trainer_name
-                FROM trainers as t
-                JOIN trainer_pokemon as tp ON t.trainer_ID = tp.trainer_id
-                WHERE tp.pokemon_name = %s
-                """
-                cursor.execute(sql, (pokemon,))
-                results = cursor.fetchall()
-                df = pd.DataFrame(results)
-        finally:
-            connection.close()
+        
+        if pokemon != "Blank":    
+            try:
+                with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+                    sql = """
+                    SELECT t.trainer_ID, t.trainer_name
+                    FROM trainers as t
+                    JOIN trainer_pokemon as tp ON t.trainer_ID = tp.trainer_id
+                    WHERE tp.pokemon_name = %s
+                    """
+                    cursor.execute(sql, (pokemon,))
+                    results = cursor.fetchall()
+                    df = pd.DataFrame(results)
+            finally:
+                connection.close()
+        else:
+            df = pd.read_csv('data/trainers.csv')
 
-    return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, tables=[df.to_html(header="true")])
+    styled_df = style_df(df)
+    return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, tables=[styled_df.to_html(header="true", border=2, justify="center")])
 
 @app.route("/teams")
 def teams():

@@ -35,6 +35,15 @@ class RegionsForm(Form):
         regs.append((r, r))
     regions = SelectField('Regions', choices=regs)
 
+
+class PokemonsForm(Form):
+    pmons = [('Blank', '')]
+    for p in POKEMON:
+        pmons.append((p, p))
+    pokemons = SelectField('Regions', choices=pmons)
+
+    
+
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:password@localhost/Pokemon"
@@ -74,7 +83,16 @@ def newtrainer():
 
 @app.route("/trainers")
 def trainers():
-    return render_template('trainers.html')
+    pokemons = PokemonsForm(request.form)
+
+    pokemon = 'no pokemon'
+
+    df = pd.read_csv('data/trainers.csv')
+
+    if request.method == 'POST':
+        pokemon = pokemons.moves.data
+
+    return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, tables=[df.to_html(header="true")])
 
 @app.route("/teams")
 def teams():

@@ -43,18 +43,24 @@ class PokemonsForm(Form):
     for p in POKEMON:
         pmons.append((p, p))
     pokemons = SelectField('Regions', choices=pmons)
+    
+
+class NameForm(Form):
+    name = StringField('Name', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 
-def get_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-using-pymysql-in-python/
+def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-using-pymysql-in-python/
     return pymysql.connect(
         host='localhost',
         user='root',
-        password="your password here",
+        password=os.environ["MYSQL_DB_PWD"], # MODIFY FOR YOUR PASSWORD
         db='Pokemon',
         cursorclass=pymysql.cursors.DictCursor
     )
 
 app = Flask(__name__)
+# app.secret_key = 'dev_pokemon_secret_1234'
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:password@localhost/Pokemon"
 db = SQLAlchemy(model_class=Base)
@@ -87,9 +93,41 @@ def pokemon():
     return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
                            ability=ability, type1=type1, region=region, move=move, tables=[df.to_html(header="true")])
 
-@app.route("/newtrainer")
+@app.route("/newtrainer", methods=['GET', 'POST'])
 def newtrainer():
-    return render_template('newtrainer.html')
+    name_form = NameForm(request.form)
+    
+    trainer_df = pd.read_csv('data/trainers.csv')
+    
+    if name_form.validate():
+        trainer_name = name_form.name.data
+        connection = get_pymysql_connection()
+        
+        try:
+            with connection.cursor() as cursor: 
+                cursor.execute("SELECT MAX(trainer_ID) as max_id FROM trainers;") # IF NULL (should never be the case) set to 0 
+                
+                max_id = cursor.fetchone()["max_id"]
+                new_id = max_id + 1
+                
+                sql = "INSERT INTO trainers (trainer_ID, trainer_name) VALUES (%s, %s)"
+                cursor.execute(sql, (new_id, trainer_name))
+                connection.commit()
+                
+                sql = """
+                    SELECT t.trainer_ID, t.trainer_name
+                    FROM trainers as t
+                    """
+                    
+                cursor.execute(sql)
+                results = cursor.fetchall()
+                trainer_df = pd.DataFrame(results)
+        finally:
+                connection.close()
+                
+    
+    styled_df = style_df(trainer_df)
+    return render_template('newtrainer.html', name_form=name_form, tables=[styled_df.to_html(header="true", border=2, justify="center")])
 
 def style_df(df):
     styled_df = df.style.set_table_styles([
@@ -109,7 +147,7 @@ def trainers():
 
     if request.method == 'POST' and pokemons.validate():
         pokemon = pokemons.pokemons.data
-        connection = get_connection()
+        connection = get_pymysql_connection()
         
         if pokemon != "Blank":    
             try:

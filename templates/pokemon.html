@@ -15,15 +15,39 @@
     <div class="py-2"> 
         Show a list of Pokemon with
         <form action="" method="POST" name="Moves" class="py-2">
-            <div class="py-1"> 
-                Move
+            <div class="row mb-2">
+                <div class="col-sm-1">
+                    Moves
+                </div>
+                <div class="col-sm-1">
                 {{moves.moves()}}
+                </div>
             </div>
-            <div class="py-1"> 
-                Ability
-                {{abilities.abilities()}}
+            <div class="row mb-2">
+                <div class="col-sm-1">
+                    Ability
+                </div>
+                <div class="col-sm-1">
+                    {{abilities.abilities()}}
+                </div>
             </div>
-            <input type="submit" value="Go">
+            <div class="row mb-2">
+                <div class="col-sm-1">
+                    Type
+                </div>
+                <div class="col-sm-1">
+                    {{types1.types()}}
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-1">
+                    From
+                </div>
+                <div class="col-sm-1">
+                    {{regions.regions()}}
+                </div>
+            </div>
+            <input type="submit" value="Search">
         </form>
         Values: {{move}} {{ability}} {{type1}} {{type2}} {{region}}
     </div>

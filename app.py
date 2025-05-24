@@ -49,24 +49,21 @@ def pokemon():
     moves = MovesForm(request.form)
     abilities = AbilitiesForm(request.form)
     types1 = TypesForm(request.form)
-    types2 = TypesForm(request.form)
     regions = RegionsForm(request.form)
 
     move = 'no move'
     ability = 'no ability'
     type1 = 'no type1'
-    type2 = 'no type2'
     region = 'no region'
 
     if request.method == 'POST':
         move = moves.moves.data
         ability = abilities.abilities.data
         type1 = types1.types.data
-        type2 = types2.types.data
         region = regions.regions.data
 
-    return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, types2=types2, regions=regions, 
-                           ability=ability, type1=type1, type2=type2, region=region, move=move)
+    return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
+                           ability=ability, type1=type1, region=region, move=move)
 
 @app.route("/newtrainer")
 def newtrainer():

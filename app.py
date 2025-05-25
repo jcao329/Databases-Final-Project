@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from wtforms import Form, SelectField, StringField, SubmitField
+from wtforms import Form, SelectField, StringField, SubmitField, BooleanField
 from wtforms.validators import DataRequired
 from load_data import POKEMON, MOVES, ABILITIES, TYPES, REGIONS, TEAMS, TRAINERS
 import pandas as pd
@@ -12,7 +12,9 @@ class MovesForm(Form):
     for move in MOVES:
         moves.append((move, move))
     moves = SelectField('Moves', choices=moves)
-    submit = SubmitField('Go')
+
+class LegendaryForm(Form):
+    legendary = BooleanField('Legendary')
 
 class AbilitiesForm(Form):
     abilities = [('Blank', '')]
@@ -32,6 +34,11 @@ class RegionsForm(Form):
         regs.append((r, r))
     regions = SelectField('Regions', choices=regs)
 
+class TeamsForm(Form):
+    teams = [('Blank', '')]
+    for t in TEAMS:
+        teams.append((t, t))
+    teams = SelectField('Teams', choices=teams)
 
 class PokemonsForm(Form):
     pmons = [('Blank', '')]
@@ -68,17 +75,20 @@ def pokemon():
     abilities = AbilitiesForm(request.form)
     types1 = TypesForm(request.form)
     regions = RegionsForm(request.form)
+    legendaryfm = LegendaryForm(request.form)
 
-    move = 'no move'
-    ability = 'no ability'
-    type1 = 'no type1'
-    region = 'no region'
+    move = 'Blank'
+    ability = 'Blank'
+    type1 = 'Blank'
+    region = 'Blank'
+    legendary = False
 
 
-    df = pd.read_csv('data/pokemon.csv')
+    df = pd.read_csv('data/pokemon.csv')[["pokemon_name", "is_legendary", "type1", "type2"]]
     
     if request.method == 'POST':
         move = moves.moves.data
+        legendary = legendaryfm.legendary.data
         ability = abilities.abilities.data
         type1 = types1.types.data
         region = regions.regions.data
@@ -86,11 +96,12 @@ def pokemon():
 
         if all(x == 'Blank' for x in [move, ability, type1, region]):
                     render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
-                           ability=ability, type1=type1, region=region, move=move, tables=[df.to_html(header="true")])
+                           ability=ability, type1=type1, region=region, move=move, legendary=legendary, legendaryfm=legendaryfm,
+                           tables=[df.to_html(header="true", border=2, justify="center")])
 
         try: 
             with connection.cursor() as cursor:
-                sql = """SELECT DISTINCT p.pokemon_name, r.region_name, p.is_legendary, p.type1 \
+                sql = """SELECT DISTINCT p.pokemon_name, r.region_name, p.is_legendary, p.type1, p.type2 \
                         FROM pokemon p \
                         JOIN pokemon_moves pm ON p.pokemon_id = pm.pokemon_id \
                         JOIN moves m ON m.move_id = pm.move_id\
@@ -111,6 +122,8 @@ def pokemon():
                 if region != 'Blank':
                     sql += " AND r.region_name = %s"
                     params.append(region)
+                if legendary:
+                    sql += " AND p.is_legendary = 1"
                 
                 cursor.execute(sql, params)
                 results = cursor.fetchall()
@@ -118,8 +131,9 @@ def pokemon():
         finally:
             connection.close()
 
-    return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
-                           ability=ability, type1=type1, region=region, move=move, tables=[df.to_html(header="true")])
+    df = style_df(df)
+    return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, legendaryfm=legendaryfm,
+                           ability=ability, type1=type1, region=region, move=move, legendary=legendary, tables=[df.to_html(header="true", border=2, justify="center")])
 
 @app.route("/newtrainer", methods=['GET', 'POST'])
 def newtrainer():
@@ -197,9 +211,48 @@ def trainers():
     styled_df = style_df(df)
     return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, tables=[styled_df.to_html(header="true", border=2, justify="center")])
 
-@app.route("/teams")
+@app.route("/teams", methods=["GET", "POST"])
 def teams():
-    return render_template('teams.html')
+    teams = TeamsForm(request.form)
+    regions = RegionsForm(request.form)
+
+    team = 'Blank'
+    region = 'Blank'
+
+    # fetch default table
+    connection = get_pymysql_connection()
+    with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+        sql = """
+        SELECT t.team_id, t.team_name, r.region_name
+        FROM teams as t
+        JOIN regions as r ON t.region_id = r.region_id
+        """
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        df = pd.DataFrame(results)
+    connection.close()
+
+    if request.method == 'POST':
+        region = regions.regions.data
+        connection = get_pymysql_connection()
+        
+        if region != "Blank":    
+            try:
+                with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+                    sql = """
+                    SELECT t.team_id, t.team_name, r.region_name
+                    FROM teams as t
+                    JOIN regions as r ON t.region_id = r.region_id
+                    WHERE r.region_name = %s
+                    """
+                    cursor.execute(sql, (region,))
+                    results = cursor.fetchall()
+                    df = pd.DataFrame(results)
+            finally:
+                connection.close()
+
+    df = style_df(df)
+    return render_template('teams.html', regions=regions, region=region, tables=[df.to_html(header="true", border=2, justify="center")])
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -49,9 +49,17 @@
                                 {{regions.regions()}}
                             </div>
                         </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Legendary
+                            </div>
+                            <div class="col-sm-2">
+                                {{legendaryfm.legendary}}
+                            </div>
+                        </div>
                         <input type="submit" value="Search">
                     </form>
-                    Values: {{move}} {{ability}} {{type1}} {{type2}} {{region}}
+                    Values: {{move}} {{ability}} {{type1}} {{region}} {{legendary}}
                 </div>
 
 
@@ -63,7 +71,7 @@
                 </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-6" style="max-height: 600px; overflow-y: auto; border: 1px solid grey; padding: 15px;">
                 {% for table in tables %}
                     {{ table|safe }}
                 {% endfor %}

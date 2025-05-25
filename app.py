@@ -88,7 +88,7 @@ def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-u
     return pymysql.connect(
         host='localhost',
         user='root',
-        password = "PWD", # MODIFY FOR YOUR PASSWORD
+        password = "password", # MODIFY FOR YOUR PASSWORD
         db='Pokemon',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -226,11 +226,14 @@ def trainers():
     df = pd.read_csv('data/trainers.csv')
 
     if request.method == 'POST':
+        print("here")
         if pokemons.pokemon_submit.data and pokemons.validate():
+            print("here 1")
             pokemon = pokemons.pokemons.data
+            
             connection = get_pymysql_connection()
             
-            if region != "Blank":    
+            if pokemon != "Blank":    
                 try:
                     with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
                         sql = """
@@ -239,13 +242,14 @@ def trainers():
                         JOIN trainer_pokemon as tp ON t.trainer_ID = tp.trainer_id
                         WHERE tp.pokemon_name = %s
                         """
-                        cursor.execute(sql, (region,))
+                        cursor.execute(sql, (pokemon,))
                         results = cursor.fetchall()
                         df = pd.DataFrame(results)
                 finally:
                     connection.close()
                     
         elif combined_form.combined_submit.data and combined_form.validate():
+            print("here 2")
             move = combined_form.moves.data
             ability = combined_form.abilities.data
             type1 = combined_form.types.data
@@ -291,6 +295,7 @@ def trainers():
                 connection.close()
                     
         else:
+            print("here3")
             df = pd.read_csv('data/trainers.csv')
 
     styled_df = style_df(df)

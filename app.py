@@ -39,8 +39,15 @@ class TeamsForm(Form):
     teams = [('Blank', '')]
     for t in TEAMS:
         teams.append((t, t))
-    teams = SelectField('Teams', choices=teams)
-    team_submit = SubmitField('Search')
+    trainer_teams = SelectField('Trainer Teams', choices=teams)
+    trainer_submit = SubmitField('Search')
+
+class PokemonTeamsForm(Form):
+    teams = [('Blank', '')]
+    for t in TEAMS:
+        teams.append((t, t))
+    pokemon_teams = SelectField('Pokemon Teams', choices=teams)
+    pokemon_submit = SubmitField('Search')
 
 class PokemonsForm(Form):
     pmons = [('Blank', '')]
@@ -53,6 +60,16 @@ class PokemonsForm(Form):
 
 class NameForm(Form):
     name = StringField('Name', validators=[DataRequired()])
+    pmons = [('Blank', '')]
+    for p in POKEMON:
+        pmons.append((p, p))
+
+    p1 = SelectField('Pokemon', choices=pmons)
+    p2 = SelectField('Pokemon', choices=pmons)
+    p3 = SelectField('Pokemon', choices=pmons)
+    p4 = SelectField('Pokemon', choices=pmons)
+    p5 = SelectField('Pokemon', choices=pmons)
+    p6 = SelectField('Pokemon', choices=pmons)
     submit = SubmitField('Submit')
     
 class CombinedTrainerForm(Form):
@@ -172,9 +189,18 @@ def newtrainer():
     name_form = NameForm(request.form)
     
     trainer_df = pd.read_csv('data/trainers.csv')
+    tables=[]
     
     if name_form.validate():
         trainer_name = name_form.name.data
+        p1 = name_form.p1.data
+        p2 = name_form.p2.data
+        p3 = name_form.p3.data
+        p4 = name_form.p4.data
+        p5 = name_form.p5.data
+        p6 = name_form.p6.data
+        add_pkmn = set([p1, p2, p3, p4, p5, p6])
+        add_pkmn.discard('Blank')
         connection = get_pymysql_connection()
         
         try:
@@ -187,21 +213,37 @@ def newtrainer():
                 sql = "INSERT INTO trainers (trainer_ID, trainer_name) VALUES (%s, %s)"
                 cursor.execute(sql, (new_id, trainer_name))
                 connection.commit()
+
+                for pkmn in add_pkmn:
+                    sql = "INSERT INTO trainer_pokemon (trainer_ID, pokemon_name) VALUES (%s, %s)"
+                    cursor.execute(sql, (new_id, pkmn))
+                    connection.commit()
                 
                 sql = """
                     SELECT t.trainer_ID, t.trainer_name
                     FROM trainers as t
                     """
-                    
                 cursor.execute(sql)
                 results = cursor.fetchall()
                 trainer_df = pd.DataFrame(results)
+
+                sql = """
+                    SELECT t.trainer_name, tp.pokemon_name
+                    FROM trainer_pokemon as tp
+                    JOIN trainers as t ON t.trainer_ID = tp.trainer_ID
+                    WHERE t.trainer_ID = %s
+                    """
+                cursor.execute(sql, (new_id))
+                results = cursor.fetchall()
+                new_df = style_df(pd.DataFrame(results))
+                tables.append(new_df.to_html(header="true", border=2, justify="center"))
         finally:
                 connection.close()
                 
     
     styled_df = style_df(trainer_df)
-    return render_template('newtrainer.html', name_form=name_form, tables=[styled_df.to_html(header="true", border=2, justify="center")])
+    tables.append(styled_df.to_html(header="true", border=2, justify="center"))
+    return render_template('newtrainer.html', name_form=name_form, tables=tables)
 
 def style_df(df):
     styled_df = df.style.set_table_styles([
@@ -307,10 +349,12 @@ def trainers():
 @app.route("/teams", methods=["GET", "POST"])
 def teams():
     teams = TeamsForm(request.form)
+    pkmn_teams = PokemonTeamsForm(request.form)
     regions = RegionsForm(request.form)
 
     team = 'Blank'
     region = 'Blank'
+    pkmn_team = 'Blank'
 
     # fetch default table
     connection = get_pymysql_connection()
@@ -344,8 +388,8 @@ def teams():
                         df = pd.DataFrame(results)
                 finally:
                     connection.close()
-        elif teams.team_submit.data and teams.validate():
-            team = teams.teams.data
+        elif teams.trainer_submit.data and teams.validate():
+            team = teams.trainer_teams.data
             connection = get_pymysql_connection()
 
             if team != "Blank":    
@@ -363,8 +407,30 @@ def teams():
                 finally:
                     connection.close()
 
+        elif pkmn_teams.pokemon_submit.data and pkmn_teams.validate():
+            pkmn_team = pkmn_teams.pokemon_teams.data
+            connection = get_pymysql_connection()
+
+            if pkmn_team != "Blank":    
+                try:
+                    with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+                        sql = """
+                        SELECT t.team_name, tp.pokemon_name, COUNT(tp.pokemon_name) AS pokemon_count
+                        FROM teams as t
+                        JOIN trainers as tr ON t.team_id = tr.team_ID
+                        JOIN trainer_pokemon as tp on tp.trainer_ID = tr.trainer_ID
+                        WHERE t.team_name = %s
+                        GROUP BY tp.pokemon_name
+                        ORDER BY pokemon_count DESC
+                        """
+                        cursor.execute(sql, (pkmn_team,))
+                        results = cursor.fetchall()
+                        df = pd.DataFrame(results)
+                finally:
+                    connection.close()
+
     df = style_df(df)
-    return render_template('teams.html', regions=regions, region=region, teams=teams, team=team, tables=[df.to_html(header="true", border=2, justify="center")])
+    return render_template('teams.html', regions=regions, region=region, teams=teams, team=team, pkmn_teams=pkmn_teams, pkmn_team=pkmn_team, tables=[df.to_html(header="true", border=2, justify="center")])
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -21,6 +21,37 @@
                           {{ name_form.name.label }}<br>
                           {{ name_form.name(size=30) }}
                         </p>
+                        Select up to six Pokemon to put on your trainer's team:
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                {{name_form.p1()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                {{name_form.p2()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                {{name_form.p3()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                {{name_form.p4()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                {{name_form.p5()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                {{name_form.p6()}}
+                            </div>
+                        </div>
                         <p>{{ name_form.submit() }}</p>
                     </form>
                 </div>
@@ -28,17 +59,26 @@
 
                 <div class="links d-flex flex-wrap gap-2"> <!-- https://stackoverflow.com/questions/64204395/how-to-make-space-between-items-using-d-flex -->
                     <a href="/pokemon" class="btn btn-primary">Pokemon</a>
-                    <a href="/trainers" class="btn btn-primary">Trainers w/ Pokemon</a>
+                    <a href="/trainers" class="btn btn-primary">Trainers</a>
                     <a href="/teams" class="btn btn-primary">Teams</a>
                     <a href="/newtrainer" class="btn btn-primary">Add new trainer</a>
                 </div>
             </div>
 
             <div class="col-6" style="max-height: 600px; overflow-y: auto; border: 1px solid grey; padding: 15px;">
+                {% if tables|length == 1 %}
                 <h3> Trainers so far </h3>
                 {% for table in tables %}
                     {{ table|safe }}
+                    <p></p>
                 {% endfor %}
+                {% else %}
+                <h3> Your trainer</h3>
+                {{ tables[0]|safe }}
+                <p></p>
+                <h3> Trainers so far </h3>
+                {{ tables[1]|safe }}
+                {% endif %}
             </div>
         </div>
     </div>

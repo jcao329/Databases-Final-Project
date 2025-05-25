@@ -14,9 +14,9 @@
                 <h2>Teams</h2>
                 <a href="/"  class="btn btn-outline-secondary my-2">Back to index</a>
 
-                <div class="py-2"> 
+                <div class="py-2" style="border-bottom:1px solid #cecece;"> 
                     Show teams from
-                    <form action="" method="POST" name="Moves" class="py-2">
+                    <form action="" method="POST" name="Moves" class="py-2" style="padding-left: 20px;">
                         <div class="row mb-2">
                             <div class="col-sm-2">
                                 Region
@@ -30,26 +30,41 @@
                     Values: {{region}}
                 </div>
 
-                <div class="py-2"> 
+                <div class="py-2" style="border-bottom:1px solid #cecece;"> 
                     Show trainers on
-                    <form action="" method="POST" name="Moves" class="py-2">
+                    <form action="" method="POST" name="Moves" class="py-2" style="padding-left: 20px;">
                         <div class="row mb-2">
                             <div class="col-sm-2">
                                 Team
                             </div>
                             <div class="col-sm-2">
-                            {{teams.teams()}}
+                            {{teams.trainer_teams()}}
                             </div>
                         </div>
-                        {{teams.team_submit()}}
+                        {{teams.trainer_submit()}}
                     </form>
                     Values: {{team}}
                 </div>
 
+                <div class="py-2"> 
+                    Show the counts of Pokemon owned by a team in descending order
+                    <form action="" method="POST" name="Moves" class="py-2" style="padding-left: 20px;">
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Team
+                            </div>
+                            <div class="col-sm-2">
+                            {{pkmn_teams.pokemon_teams()}}
+                            </div>
+                        </div>
+                        {{pkmn_teams.pokemon_submit()}}
+                    </form>
+                    Values: {{pkmn_team}}
+                </div>
 
-                <div class="links d-flex flex-wrap gap-2"> <!-- https://stackoverflow.com/questions/64204395/how-to-make-space-between-items-using-d-flex -->
+                <div class="links d-flex flex-wrap gap-2 py-2"> <!-- https://stackoverflow.com/questions/64204395/how-to-make-space-between-items-using-d-flex -->
                     <a href="/pokemon" class="btn btn-primary">Pokemon</a>
-                    <a href="/trainers" class="btn btn-primary">Trainers w/ Pokemon</a>
+                    <a href="/trainers" class="btn btn-primary">Trainers</a>
                     <a href="/teams" class="btn btn-primary">Teams</a>
                     <a href="/newtrainer" class="btn btn-primary">Add new trainer</a>
                     

@@ -4,37 +4,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Trainer</title>
+  <title>Trainer - Team Query</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 </head>
 <body>
     <div class="container text-align-center my-4">
         <div class="row">
             <div class="col-5">
-                <h2>Trainer</h2>
+                <h2>Get Trainer from Team</h2>
                 <a href="/"  class="btn btn-outline-secondary my-2">Back to index</a>
 
                 <div class="py-2"> 
-                    Show a list of Trainers with
+                    Show a list of Trainers in
                     <form action="" method="POST" name="TrainerSearch" class="py-2">
                         <div class="row mb-2">
                             <div class="col-sm-2">
-                                Pokemon
+                                Team
                             </div>
                             <div class="col-sm-2">
-                            {{pokemons.pokemons()}}
+                            {{teams.teams()}}
                             </div>
                         </div>
                         
                         <input type="submit" value="Search">
                     </form>
-                    Values: {{pokemon}}
+                    Values: {{team}}
                 </div>
 
 
-                <div class="links d-flex flex-wrap gap-2"> <!-- https://stackoverflow.com/questions/64204395/how-to-make-space-between-items-using-d-flex -->
+                <div class="links d-flex flex-wrap gap-2">
                     <a href="/pokemon" class="btn btn-primary">Pokemon</a>
-                    <a href="/trainers-in-team" class="btn btn-primary">Trainers in Team</a>
+                    <a href="/trainers" class="btn btn-primary">Trainers w/ Pokemon</a>
                     <a href="/teams" class="btn btn-primary">Teams</a>
                     <a href="/newtrainer" class="btn btn-primary">Add new trainer</a>
                 </div>

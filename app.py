@@ -58,7 +58,7 @@ def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-u
     return pymysql.connect(
         host='localhost',
         user='root',
-        password = os.environ["MYSQL_DB_PWD"], # MODIFY FOR YOUR PASSWORD
+        password = "password", # MODIFY FOR YOUR PASSWORD
         db='Pokemon',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -212,6 +212,40 @@ def trainers():
 
     styled_df = style_df(df)
     return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, tables=[styled_df.to_html(header="true", border=2, justify="center")])
+
+
+@app.route("/trainers-in-team", methods=["GET", "POST"])
+def trainers_extra_queries():
+    teams = TeamsForm(request.form)
+
+    team = 'Blank'
+
+    df = pd.read_csv('data/trainers.csv')
+
+    if request.method == 'POST' and teams.validate():
+        team = teams.teams.data
+        connection = get_pymysql_connection()
+        
+        if team != "Blank":    
+            try:
+                with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+                    sql = """
+                    SELECT t.trainer_ID, t.trainer_name, tm.team_name
+                    FROM trainers as t
+                    JOIN teams as tm ON t.team_ID = tm.team_ID
+                    WHERE tm.team_name = %s
+                    """
+                    cursor.execute(sql, (team,))
+                    results = cursor.fetchall()
+                    df = pd.DataFrame(results)
+            finally:
+                connection.close()
+        else:
+            df = pd.read_csv('data/trainers.csv')
+
+    styled_df = style_df(df)
+    return render_template('trainer_team_query.html', teams=teams, team=team, tables=[styled_df.to_html(header="true", border=2, justify="center")])
+
 
 @app.route("/teams", methods=["GET", "POST"])
 def teams():

@@ -25,6 +25,11 @@ try:
     trainer_pokemon = pd.read_csv('data/trainer_pokemon.csv')
     teams = pd.read_csv('data/teams.csv')
     pokemon_moves = pd.read_csv('data/pokemon_moves.csv')
+    pokemon_moves_1 = pd.read_csv('data/pokemon_moves_1.csv')
+    pokemon_moves_2 = pd.read_csv('data/pokemon_moves_2.csv')
+    pokemon_moves_3 = pd.read_csv('data/pokemon_moves_3.csv')
+    pokemon_moves_4 = pd.read_csv('data/pokemon_moves_4.csv')
+    pokemon_moves_5 = pd.read_csv('data/pokemon_moves_5.csv')
 except Exception as e:
     print("Cannot load files:", e)
     exit(1)
@@ -90,9 +95,20 @@ CREATE TABLE IF NOT EXISTS type_effectiveness (
 """)
 
 cursorObject.execute("""
+CREATE TABLE IF NOT EXISTS teams (
+	team_id INT PRIMARY KEY,
+	team_name VARCHAR(20),
+    region_id INT,
+	FOREIGN KEY (region_id) REFERENCES regions(region_id)
+);
+""")
+
+cursorObject.execute("""
 CREATE TABLE IF NOT EXISTS trainers (
     trainer_ID INT PRIMARY KEY,
-    trainer_name VARCHAR(100)
+    trainer_name VARCHAR(100),
+    team_ID INT,
+    FOREIGN KEY (team_ID) REFERENCES teams(team_id)
 );
 """)
 
@@ -100,22 +116,18 @@ cursorObject.execute("""
 CREATE TABLE IF NOT EXISTS trainer_pokemon (
     trainer_ID INT,
     pokemon_name VARCHAR(50),
+    PRIMARY KEY (trainer_ID, pokemon_name),
     FOREIGN KEY (trainer_ID) REFERENCES trainers(trainer_ID)
-);
-""")
-
-cursorObject.execute("""
-CREATE TABLE IF NOT EXISTS teams (
-	team_id INT,
-	team_name VARCHAR(20),
-	region_id INT
 );
 """)
 
 cursorObject.execute("""
 CREATE TABLE IF NOT EXISTS pokemon_moves (
 	move_id INT,
-	pokemon_id INT
+	pokemon_id INT,
+    PRIMARY KEY (move_id, pokemon_id),
+    FOREIGN KEY (move_id) REFERENCES moves(move_id),
+    FOREIGN KEY (pokemon_id) REFERENCES pokemon(pokemon_id)            
 );
 """)
 
@@ -167,13 +179,13 @@ for _, row in pokemon.iterrows():
         """, (convert_to_none(row['pokemon_id']), convert_to_none(ability)))
 myConnection.commit()
 
-for _, row in moves.iterrows():
+for i, row in moves.iterrows():
     cursorObject.execute("""
         INSERT INTO moves
         (move_id, move_name, accuracy, power, type, damage_class)
         VALUES (%s, %s, %s, %s, %s, %s);
     """, (
-        convert_to_none(row['move_id']),
+        i,
         convert_to_none(row['move_name']),
         convert_to_none(row['accuracy']),
         convert_to_none(row['power']),
@@ -194,27 +206,30 @@ for _, row in type_eff.iterrows():
     ))
 myConnection.commit()
 
-for _, row in trainers.iterrows():
-    cursorObject.execute(
-        "INSERT INTO trainers (trainer_ID, trainer_name) VALUES (%s, %s);",
-        (convert_to_none(row['trainer_ID']), convert_to_none(row['trainer_name']))
-    )
-myConnection.commit()
-
-for _, row in trainer_pokemon.iterrows():
-    cursorObject.execute(
-        "INSERT INTO trainer_pokemon (trainer_ID, pokemon_name) VALUES (%s, %s);",
-        (convert_to_none(row['trainer_ID']), convert_to_none(row['pokemon_name']))
-    )
-
 teams['team_name'] = teams['team_name'].str.strip()
 for _, row in teams.iterrows():
     cursorObject.execute(
         "INSERT INTO teams (team_id, team_name, region_id) VALUES (%s, %s, %s);", 
         (convert_to_none(row['team_id']), convert_to_none(row['team_name']), convert_to_none(row['region_id']))
     )
+myConnection.commit()
 
-for _, row in pokemon_moves.iterrows():
+for _, row in trainers.iterrows():
+    cursorObject.execute(
+        "INSERT INTO trainers (trainer_ID, trainer_name, team_ID) VALUES (%s, %s, %s);",
+        (convert_to_none(row['trainer_ID']), convert_to_none(row['trainer_name']), (row['trainer_ID'] % 25)+1)
+    )
+myConnection.commit()
+
+trainer_pokemon.drop_duplicates(inplace=True)
+for _, row in trainer_pokemon.iterrows():
+    cursorObject.execute(
+        "INSERT INTO trainer_pokemon (trainer_ID, pokemon_name) VALUES (%s, %s);",
+        (convert_to_none(row['trainer_ID']), convert_to_none(row['pokemon_name']))
+    )
+
+pokemon_moves_1 = pd.concat([pokemon_moves_1, pokemon_moves_2, pokemon_moves_3, pokemon_moves_4, pokemon_moves_5]).drop_duplicates().reset_index(drop=True)
+for _, row in pokemon_moves_1.iterrows():
     cursorObject.execute(
         "INSERT INTO pokemon_moves (move_id, pokemon_id) VALUES (%s, %s);", 
         (int(row['move_id']), int(row['pokemon_id']))

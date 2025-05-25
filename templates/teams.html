@@ -25,9 +25,25 @@
                             {{regions.regions()}}
                             </div>
                         </div>
-                        <input type="submit" value="Search">
+                        {{regions.region_submit()}}
                     </form>
                     Values: {{region}}
+                </div>
+
+                <div class="py-2"> 
+                    Show trainers on
+                    <form action="" method="POST" name="Moves" class="py-2">
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Team
+                            </div>
+                            <div class="col-sm-2">
+                            {{teams.teams()}}
+                            </div>
+                        </div>
+                        {{teams.team_submit()}}
+                    </form>
+                    Values: {{team}}
                 </div>
 
 

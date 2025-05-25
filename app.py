@@ -33,12 +33,14 @@ class RegionsForm(Form):
     for r in REGIONS:
         regs.append((r, r))
     regions = SelectField('Regions', choices=regs)
+    region_submit = SubmitField('Search')
 
 class TeamsForm(Form):
     teams = [('Blank', '')]
     for t in TEAMS:
         teams.append((t, t))
     teams = SelectField('Teams', choices=teams)
+    team_submit = SubmitField('Search')
 
 class PokemonsForm(Form):
     pmons = [('Blank', '')]
@@ -233,26 +235,45 @@ def teams():
     connection.close()
 
     if request.method == 'POST':
-        region = regions.regions.data
-        connection = get_pymysql_connection()
-        
-        if region != "Blank":    
-            try:
-                with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
-                    sql = """
-                    SELECT t.team_id, t.team_name, r.region_name
-                    FROM teams as t
-                    JOIN regions as r ON t.region_id = r.region_id
-                    WHERE r.region_name = %s
-                    """
-                    cursor.execute(sql, (region,))
-                    results = cursor.fetchall()
-                    df = pd.DataFrame(results)
-            finally:
-                connection.close()
+        if regions.region_submit.data and regions.validate():
+            region = regions.regions.data
+            connection = get_pymysql_connection()
+            
+            if region != "Blank":    
+                try:
+                    with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+                        sql = """
+                        SELECT t.team_id, t.team_name, r.region_name
+                        FROM teams as t
+                        JOIN regions as r ON t.region_id = r.region_id
+                        WHERE r.region_name = %s
+                        """
+                        cursor.execute(sql, (region,))
+                        results = cursor.fetchall()
+                        df = pd.DataFrame(results)
+                finally:
+                    connection.close()
+        elif teams.team_submit.data and teams.validate():
+            team = teams.teams.data
+            connection = get_pymysql_connection()
+
+            if team != "Blank":    
+                try:
+                    with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+                        sql = """
+                        SELECT t.team_name, tr.trainer_name
+                        FROM teams as t
+                        JOIN trainers as tr ON t.team_id = tr.team_ID
+                        WHERE t.team_name = %s
+                        """
+                        cursor.execute(sql, (team,))
+                        results = cursor.fetchall()
+                        df = pd.DataFrame(results)
+                finally:
+                    connection.close()
 
     df = style_df(df)
-    return render_template('teams.html', regions=regions, region=region, tables=[df.to_html(header="true", border=2, justify="center")])
+    return render_template('teams.html', regions=regions, region=region, teams=teams, team=team, tables=[df.to_html(header="true", border=2, justify="center")])
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -46,19 +46,49 @@ class PokemonsForm(Form):
     pmons = [('Blank', '')]
     for p in POKEMON:
         pmons.append((p, p))
+        
     pokemons = SelectField('Regions', choices=pmons)
+    pokemon_submit = SubmitField('Search')
     
 
 class NameForm(Form):
     name = StringField('Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
+    
+class CombinedTrainerForm(Form):
+    
+    moves = [('Blank', '')]
+    for move in MOVES:
+        moves.append((move, move))
+    moves = SelectField('Moves', choices=moves)
+    
+        
+    abilities = [('Blank', '')]
+    for a in ABILITIES:
+        abilities.append((a, a))
+    abilities = SelectField('Abilities', choices=abilities)
+    
+    types = [('Blank', '')]
+    for t in TYPES:
+        types.append((t, t))
+    types = SelectField('Types', choices=types)    
+    
+    regs = [('Blank', '')]
+    for r in REGIONS:
+        regs.append((r, r))
+    regions = SelectField('Regions', choices=regs)
+    
+    combined_submit = SubmitField('Search')
+    
+    
+    
 
 
 def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-using-pymysql-in-python/
     return pymysql.connect(
         host='localhost',
         user='root',
-        password = "password", # MODIFY FOR YOUR PASSWORD
+        password = "PWD", # MODIFY FOR YOUR PASSWORD
         db='Pokemon',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -184,67 +214,89 @@ def style_df(df):
 @app.route("/trainers", methods=["GET", "POST"])
 def trainers():
     pokemons = PokemonsForm(request.form)
-
-    pokemon = 'no pokemon'
+    pokemon = 'Blank'
+    
+    combined_form = CombinedTrainerForm(request.form)
+    
+    move = 'Blank'
+    ability = 'Blank'
+    type1 = 'Blank'
+    region = 'Blank'
 
     df = pd.read_csv('data/trainers.csv')
 
-    if request.method == 'POST' and pokemons.validate():
-        pokemon = pokemons.pokemons.data
-        connection = get_pymysql_connection()
-        
-        if pokemon != "Blank":    
-            try:
-                with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
-                    sql = """
-                    SELECT t.trainer_ID, t.trainer_name
-                    FROM trainers as t
-                    JOIN trainer_pokemon as tp ON t.trainer_ID = tp.trainer_id
-                    WHERE tp.pokemon_name = %s
-                    """
-                    cursor.execute(sql, (pokemon,))
+    if request.method == 'POST':
+        if pokemons.pokemon_submit.data and pokemons.validate():
+            pokemon = pokemons.pokemons.data
+            connection = get_pymysql_connection()
+            
+            if region != "Blank":    
+                try:
+                    with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
+                        sql = """
+                        SELECT t.trainer_ID, t.trainer_name
+                        FROM trainers as t
+                        JOIN trainer_pokemon as tp ON t.trainer_ID = tp.trainer_id
+                        WHERE tp.pokemon_name = %s
+                        """
+                        cursor.execute(sql, (region,))
+                        results = cursor.fetchall()
+                        df = pd.DataFrame(results)
+                finally:
+                    connection.close()
+                    
+        elif combined_form.combined_submit.data and combined_form.validate():
+            move = combined_form.moves.data
+            ability = combined_form.abilities.data
+            type1 = combined_form.types.data
+            region = combined_form.regions.data
+            
+            connection = get_pymysql_connection()
+            
+            if all(x == 'Blank' for x in [move, ability, type1, region]):
+                    render_template('trainers.html', pokemons=pokemons, combined=combined_form, 
+                           ability=ability, type1=type1, region=region, move=move,
+                           tables=[df.to_html(header="true", border=2, justify="center")])
+
+            try: 
+                with connection.cursor() as cursor:
+                    sql = """SELECT DISTINCT t.trainer_ID, t.trainer_name \
+                            FROM trainers as t \
+                            JOIN trainer_pokemon as tp ON t.trainer_ID = tp.trainer_id \
+                            JOIN pokemon as p ON tp.pokemon_name = p.pokemon_name
+                            JOIN pokemon_moves pm ON p.pokemon_id = pm.pokemon_id \
+                            JOIN moves m ON m.move_id = pm.move_id\
+                            JOIN pokemon_abilities pa ON p.pokemon_id = pa.pokemon_id \
+                            JOIN regions r ON p.region_id = r.region_id \
+                            WHERE 1=1"""
+                    
+                    params = []
+                    if move != 'Blank':
+                        sql += " AND m.move_name = %s"
+                        params.append(move)
+                    if ability != 'Blank':
+                        sql += " AND pa.ability = %s"
+                        params.append(ability)
+                    if type1 != 'Blank':
+                        sql += " AND p.type1 = %s"
+                        params.append(type1)
+                    if region != 'Blank':
+                        sql += " AND r.region_name = %s"
+                        params.append(region)
+                    
+                    cursor.execute(sql, params)
                     results = cursor.fetchall()
                     df = pd.DataFrame(results)
             finally:
                 connection.close()
+                    
         else:
             df = pd.read_csv('data/trainers.csv')
 
     styled_df = style_df(df)
-    return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, tables=[styled_df.to_html(header="true", border=2, justify="center")])
-
-
-@app.route("/trainers-in-team", methods=["GET", "POST"])
-def trainers_extra_queries():
-    teams = TeamsForm(request.form)
-
-    team = 'Blank'
-
-    df = pd.read_csv('data/trainers.csv')
-
-    if request.method == 'POST' and teams.validate():
-        team = teams.teams.data
-        connection = get_pymysql_connection()
-        
-        if team != "Blank":    
-            try:
-                with connection.cursor() as cursor: # https://pymysql.readthedocs.io/en/latest/user/examples.html
-                    sql = """
-                    SELECT t.trainer_ID, t.trainer_name, tm.team_name
-                    FROM trainers as t
-                    JOIN teams as tm ON t.team_ID = tm.team_ID
-                    WHERE tm.team_name = %s
-                    """
-                    cursor.execute(sql, (team,))
-                    results = cursor.fetchall()
-                    df = pd.DataFrame(results)
-            finally:
-                connection.close()
-        else:
-            df = pd.read_csv('data/trainers.csv')
-
-    styled_df = style_df(df)
-    return render_template('trainer_team_query.html', teams=teams, team=team, tables=[styled_df.to_html(header="true", border=2, justify="center")])
+    return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, combined=combined_form, 
+                           ability=ability, type1=type1, region=region, move=move,
+                           tables=[styled_df.to_html(header="true", border=2, justify="center")])
 
 
 @app.route("/teams", methods=["GET", "POST"])

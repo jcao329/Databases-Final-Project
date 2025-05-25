@@ -15,8 +15,8 @@
                 <a href="/"  class="btn btn-outline-secondary my-2">Back to index</a>
 
                 <div class="py-2"> 
-                    Show a list of Trainers with
-                    <form action="" method="POST" name="TrainerSearch" class="py-2">
+                    Show trainers with
+                    <form action="" method="POST" name="Moves" class="py-2">
                         <div class="row mb-2">
                             <div class="col-sm-2">
                                 Pokemon
@@ -25,16 +25,55 @@
                             {{pokemons.pokemons()}}
                             </div>
                         </div>
-                        
-                        <input type="submit" value="Search">
+                        {{pokemons.pokemon_submit()}}
                     </form>
                     Values: {{pokemon}}
                 </div>
 
+                <div class="py-2"> 
+                    Show trainers that have Pokemon with
+                    <form action="" method="POST" name="Moves" class="py-2">
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Moves
+                            </div>
+                            <div class="col-sm-2">
+                            {{combined.moves()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Ability
+                            </div>
+                            <div class="col-sm-2">
+                                {{combined.abilities()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Type
+                            </div>
+                            <div class="col-sm-2">
+                                {{combined.types()}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                From
+                            </div>
+                            <div class="col-sm-2">
+                                {{combined.regions()}}
+                            </div>
+                        </div>
+                        {{combined.combined_submit()}}
+                    </form>
+                    Values: {{move}} {{ability}} {{type1}} {{region}}
+                </div>
+
+
 
                 <div class="links d-flex flex-wrap gap-2"> <!-- https://stackoverflow.com/questions/64204395/how-to-make-space-between-items-using-d-flex -->
                     <a href="/pokemon" class="btn btn-primary">Pokemon</a>
-                    <a href="/trainers-in-team" class="btn btn-primary">Trainers in Team</a>
                     <a href="/teams" class="btn btn-primary">Teams</a>
                     <a href="/newtrainer" class="btn btn-primary">Add new trainer</a>
                 </div>

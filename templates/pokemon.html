@@ -62,6 +62,21 @@
                     Values: {{move}} {{ability}} {{type1}} {{region}} {{legendary}}
                 </div>
 
+                <div class = "py-2">
+                    Show pokemon based on power/accuracy of moves: 
+                    <form action = "" method = "POST" name = "NameInsert" class = "py-2">
+                        <div class = "row-mb-2">
+                            {{ move_spec.power.label }} <br>
+                            {{ move_spec.power(size=30) }} <br>
+                        </div>
+                        <div class = "row-mb-2">
+                        {{ move_spec.accuracy.label }} <br>
+                        {{ move_spec.accuracy(size=30) }} <br>
+                        </div>
+                        {{ move_spec.submit() }}
+                    </form>
+                </div>
+
 
                 <div class="links d-flex flex-wrap gap-2"> <!-- https://stackoverflow.com/questions/64204395/how-to-make-space-between-items-using-d-flex -->
                     <a href="/pokemon" class="btn btn-primary">Pokemon</a>

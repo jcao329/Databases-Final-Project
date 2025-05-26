@@ -1,10 +1,16 @@
 from flask import Flask, render_template, request
-from wtforms import Form, SelectField, StringField, SubmitField, BooleanField
-from wtforms.validators import DataRequired
+from wtforms import Form, SelectField, StringField, SubmitField, BooleanField, IntegerField
+from wtforms.validators import DataRequired, Optional
 from load_data import POKEMON, MOVES, ABILITIES, TYPES, REGIONS, TEAMS, TRAINERS
 import pandas as pd
 import pymysql
 import os
+
+
+class MoveSpecForm(Form):
+    power = IntegerField('Power greater than:', validators=[Optional()])
+    accuracy = IntegerField('Accuracy greater than:',validators=[Optional()])
+    submit = SubmitField('Search')
 
 
 class MovesForm(Form):
@@ -98,14 +104,13 @@ class CombinedTrainerForm(Form):
     combined_submit = SubmitField('Search')
     
     
-    
 
 
 def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-using-pymysql-in-python/
     return pymysql.connect(
         host='localhost',
         user='root',
-        password = "password", # MODIFY FOR YOUR PASSWORD
+        password = 'password', # MODIFY FOR YOUR PASSWORD
         db='Pokemon',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -125,64 +130,97 @@ def pokemon():
     types1 = TypesForm(request.form)
     regions = RegionsForm(request.form)
     legendaryfm = LegendaryForm(request.form)
+    move_spec = MoveSpecForm(request.form)
 
     move = 'Blank'
     ability = 'Blank'
     type1 = 'Blank'
     region = 'Blank'
     legendary = False
+    # move_spec = 'Blank'
 
 
     df = pd.read_csv('data/pokemon.csv')[["pokemon_name", "is_legendary", "type1", "type2"]]
     
-    if request.method == 'POST':
-        move = moves.moves.data
-        legendary = legendaryfm.legendary.data
-        ability = abilities.abilities.data
-        type1 = types1.types.data
-        region = regions.regions.data
-        connection = get_pymysql_connection()
+    if request.method == 'POST':            
+        if move_spec.submit.data and move_spec.validate():
+            power = move_spec.power.data
+            accuracy = move_spec.accuracy.data
+            connection = get_pymysql_connection()
 
-        if all(x == 'Blank' for x in [move, ability, type1, region]):
-                    render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
-                           ability=ability, type1=type1, region=region, move=move, legendary=legendary, legendaryfm=legendaryfm,
-                           tables=[df.to_html(header="true", border=2, justify="center")])
+            try:
+                with connection.cursor() as cursor:
+                    sql =  """
+                    SELECT p.pokemon_name, m.move_name, m.power, m.accuracy
+                    FROM pokemon p 
+                    JOIN pokemon_moves pm ON p.pokemon_id = pm.pokemon_id
+                    JOIN moves m ON m.move_id = pm.move_id
+                    WHERE 1 = 1"""
+                    
+                    params = []
+                    if power is not None:
+                        sql += " AND m.power >= %s"
+                        params.append(power)
+                    elif accuracy is not None:
+                        sql += " AND m.accuracy >= %s"
+                        params.append(accuracy)
 
-        try: 
-            with connection.cursor() as cursor:
-                sql = """SELECT DISTINCT p.pokemon_name, r.region_name, p.is_legendary, p.type1, p.type2 \
-                        FROM pokemon p \
-                        JOIN pokemon_moves pm ON p.pokemon_id = pm.pokemon_id \
-                        JOIN moves m ON m.move_id = pm.move_id\
-                        JOIN pokemon_abilities pa ON p.pokemon_id = pa.pokemon_id \
-                        JOIN regions r ON p.region_id = r.region_id \
-                        WHERE 1=1"""
-                
-                params = []
-                if move != 'Blank':
-                    sql += " AND m.move_name = %s"
-                    params.append(move)
-                if ability != 'Blank':
-                    sql += " AND pa.ability = %s"
-                    params.append(ability)
-                if type1 != 'Blank':
-                    sql += " AND p.type1 = %s"
-                    params.append(type1)
-                if region != 'Blank':
-                    sql += " AND r.region_name = %s"
-                    params.append(region)
-                if legendary:
-                    sql += " AND p.is_legendary = 1"
-                
-                cursor.execute(sql, params)
-                results = cursor.fetchall()
-                df = pd.DataFrame(results)
-        finally:
-            connection.close()
+                    cursor.execute(sql, params)
+                    results = cursor.fetchall()
+                    df = pd.DataFrame(results)
+                    df = df.dropna(subset=['power', 'accuracy'])
+            finally:
+                connection.close()
+
+        else:
+            move = moves.moves.data
+            legendary = legendaryfm.legendary.data
+            ability = abilities.abilities.data
+            type1 = types1.types.data
+            region = regions.regions.data
+            connection = get_pymysql_connection()
+
+            if all(x == 'Blank' for x in [move, ability, type1, region]):
+                        render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
+                            ability=ability, type1=type1, region=region, move=move, legendary=legendary, 
+                            legendaryfm=legendaryfm, move_spec=move_spec, tables=[df.to_html(header="true", border=2, justify="center")])
+
+            try: 
+                with connection.cursor() as cursor:
+                    sql = """SELECT DISTINCT p.pokemon_name, r.region_name, p.is_legendary, p.type1, p.type2 \
+                            FROM pokemon p \
+                            JOIN pokemon_moves pm ON p.pokemon_id = pm.pokemon_id \
+                            JOIN moves m ON m.move_id = pm.move_id\
+                            JOIN pokemon_abilities pa ON p.pokemon_id = pa.pokemon_id \
+                            JOIN regions r ON p.region_id = r.region_id \
+                            WHERE 1=1"""
+                    
+                    params = []
+                    if move != 'Blank':
+                        sql += " AND m.move_name = %s"
+                        params.append(move)
+                    if ability != 'Blank':
+                        sql += " AND pa.ability = %s"
+                        params.append(ability)
+                    if type1 != 'Blank':
+                        sql += " AND p.type1 = %s"
+                        params.append(type1)
+                    if region != 'Blank':
+                        sql += " AND r.region_name = %s"
+                        params.append(region)
+                    if legendary:
+                        sql += " AND p.is_legendary = 1"
+                    
+                    cursor.execute(sql, params)
+                    results = cursor.fetchall()
+                    df = pd.DataFrame(results)
+            finally:
+                connection.close()
 
     df = style_df(df)
     return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, legendaryfm=legendaryfm,
-                           ability=ability, type1=type1, region=region, move=move, legendary=legendary, tables=[df.to_html(header="true", border=2, justify="center")])
+                           ability=ability, type1=type1, region=region, move=move, legendary=legendary, 
+                            move_spec=move_spec, tables=[df.to_html(header="true", border=2, justify="center")])
 
 @app.route("/newtrainer", methods=['GET', 'POST'])
 def newtrainer():
@@ -433,4 +471,4 @@ def teams():
     return render_template('teams.html', regions=regions, region=region, teams=teams, team=team, pkmn_teams=pkmn_teams, pkmn_team=pkmn_team, tables=[df.to_html(header="true", border=2, justify="center")])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=50001)

@@ -117,7 +117,7 @@ def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-u
     return pymysql.connect(
         host='localhost',
         user='root',
-        password = 'password', # MODIFY FOR YOUR PASSWORD
+        password = "password", # MODIFY FOR YOUR PASSWORD
         db='Pokemon',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -419,13 +419,13 @@ def trainers():
     ability = 'Blank'
     type1 = 'Blank'
     region = 'Blank'
+    
+    move_spec_form = MoveSpecForm(request.form)
 
     df = pd.read_csv('data/trainers.csv')
 
     if request.method == 'POST':
-        print("here")
         if pokemons.pokemon_submit.data and pokemons.validate():
-            print("here 1")
             pokemon = pokemons.pokemons.data
             
             connection = get_pymysql_connection()
@@ -444,9 +444,7 @@ def trainers():
                         df = pd.DataFrame(results)
                 finally:
                     connection.close()
-                    
         elif combined_form.combined_submit.data and combined_form.validate():
-            print("here 2")
             move = combined_form.moves.data
             ability = combined_form.abilities.data
             type1 = combined_form.types.data
@@ -456,7 +454,7 @@ def trainers():
             
             if all(x == 'Blank' for x in [move, ability, type1, region]):
                     render_template('trainers.html', pokemons=pokemons, combined=combined_form, 
-                           ability=ability, type1=type1, region=region, move=move,
+                           ability=ability, type1=type1, region=region, move=move, move_spec=move_spec_form,
                            tables=[df.to_html(header="true", border=2, justify="center")])
 
             try: 
@@ -490,14 +488,46 @@ def trainers():
                     df = pd.DataFrame(results)
             finally:
                 connection.close()
+        elif move_spec_form.submit.data and move_spec_form.validate():
+            power = move_spec_form.power.data
+            accuracy = move_spec_form.accuracy.data
+            connection = get_pymysql_connection()
+
+            try:
+                with connection.cursor() as cursor:
+                    sql =  """
+                    SELECT DISTINCT t.trainer_name, tp.pokemon_name, m.move_name, m.accuracy, m.power
+                    FROM trainers t
+                    JOIN trainer_pokemon tp ON t.trainer_ID = tp.trainer_ID
+                    JOIN pokemon p ON tp.pokemon_name = p.pokemon_name
+                    JOIN pokemon_moves pm ON p.pokemon_id = pm.pokemon_id
+                    JOIN moves m ON pm.move_id = m.move_id
+                    WHERE 1=1"""
                     
+                    params = []
+                    if power is not None:
+                        sql += " AND m.power >= %s"
+                        params.append(power)
+                    if accuracy is not None:
+                        sql += " AND m.accuracy >= %s"
+                        params.append(accuracy)
+                    
+                    cursor.execute(sql, params)
+                    results = cursor.fetchall()
+                    df = pd.DataFrame(results)
+                    
+                    if not accuracy:
+                        df = df.drop('accuracy', axis=1)
+                    if not power:
+                        df = df.drop('power', axis=1)
+            finally:
+                connection.close()        
         else:
-            print("here3")
             df = pd.read_csv('data/trainers.csv')
 
     styled_df = style_df(df)
     return render_template('trainers.html', pokemons=pokemons, pokemon=pokemon, combined=combined_form, 
-                           ability=ability, type1=type1, region=region, move=move,
+                           ability=ability, type1=type1, region=region, move=move, move_spec=move_spec_form,
                            tables=[styled_df.to_html(header="true", border=2, justify="center")])
 
 

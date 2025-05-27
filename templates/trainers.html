@@ -30,7 +30,7 @@
                     Values: {{pokemon}}
                 </div>
 
-                <div class="py-2"> 
+                <div class="py-2" style="border-bottom:1px solid #cecece;"> 
                     Show trainers that have Pokemon with
                     <form action="" method="POST" name="Moves" class="py-2">
                         <div class="row mb-2">
@@ -69,6 +69,22 @@
                     </form>
                     Values: {{move}} {{ability}} {{type1}} {{region}}
                 </div>
+                <div class = "py-2" style="border-bottom:1px solid #cecece;">
+                    Show Trainers with pokemon that have moves with
+                    <form action = "" method = "POST" name = "TrainerAccuracyPower" class = "py-2">
+                        <div class = "row-mb-2">
+                            {{ move_spec.power.label }} <br>
+                            {{ move_spec.power(size=30) }} <br>
+                        </div>
+                        <div class = "row-mb-2">
+                        {{ move_spec.accuracy.label }} <br>
+                        {{ move_spec.accuracy(size=30) }} <br>
+                        </div>
+                        <p></p>
+                        {{ move_spec.submit() }}
+                    </form>
+                </div>
+                
 
 
 

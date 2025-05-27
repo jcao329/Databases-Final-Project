@@ -14,7 +14,7 @@
                 <h2>Trainer</h2>
                 <a href="/"  class="btn btn-outline-secondary my-2">Back to index</a>
 
-                <div class="py-2"> 
+                <div class="py-2" style="border-bottom:1px solid #cecece;"> 
                     Show trainers with
                     <form action="" method="POST" name="Moves" class="py-2">
                         <div class="row mb-2">
@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <div class="col-6" style="max-height: 600px; overflow-y: auto; border: 1px solid grey; padding: 15px;">
+            <div class="col-6" style="position: fixed; right: 5%; max-height: 600px; overflow-y: auto; border: 1px solid grey; padding: 15px;">
                 {% for table in tables %}
                     {{ table|safe }}
                 {% endfor %}

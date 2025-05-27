@@ -62,7 +62,14 @@ class PokemonsForm(Form):
         
     pokemons = SelectField('Regions', choices=pmons)
     pokemon_submit = SubmitField('Search')
-    
+
+class PokemonsOppForm(Form):
+    pmons = [('Blank', '')]
+    for p in POKEMON:
+        pmons.append((p, p))
+        
+    pokemons_opp = SelectField('Regions', choices=pmons)
+    pokemon_submit_opp = SubmitField('Search')
 
 class NameForm(Form):
     name = StringField('Name', validators=[DataRequired()])
@@ -130,6 +137,8 @@ def pokemon():
     types1 = TypesForm(request.form)
     regions = RegionsForm(request.form)
     legendaryfm = LegendaryForm(request.form)
+    pkmns = PokemonsForm(request.form)
+    pkmns2 = PokemonsOppForm(request.form)
     move_spec = MoveSpecForm(request.form)
 
     move = 'Blank'
@@ -138,11 +147,13 @@ def pokemon():
     region = 'Blank'
     legendary = False
     # move_spec = 'Blank'
+    opponent = 'Blank'
+    opp2 = 'Blank'
 
 
     df = pd.read_csv('data/pokemon.csv')[["pokemon_name", "is_legendary", "type1", "type2"]]
     
-    if request.method == 'POST':            
+    if request.method == 'POST':
         if move_spec.submit.data and move_spec.validate():
             power = move_spec.power.data
             accuracy = move_spec.accuracy.data
@@ -171,8 +182,116 @@ def pokemon():
                     df = df.dropna(subset=['power', 'accuracy'])
             finally:
                 connection.close()
+        elif pkmns.pokemon_submit.data and pkmns.validate():
+            # print("query 2")
+            # print(request.form)
+            opponent = pkmns.pokemons.data
+            connection = get_pymysql_connection()
 
-        else:
+            if opponent != 'Blank':
+                try: 
+                    with connection.cursor() as cursor:
+                        # get the opponent type(s)
+                        sql = """SELECT DISTINCT p.pokemon_name, p.type1, p.type2 \
+                                FROM pokemon p \
+                                WHERE p.pokemon_name = %s"""
+                        
+                        cursor.execute(sql, (opponent))
+                        results = cursor.fetchall()
+                        t1 = results[0]['type1']
+                        t2 = results[0]['type2']
+
+                        if t2:
+                            sql = """SELECT DISTINCT p.pokemon_name, m.move_name, m.type, m.power, exp(sum(ln(te.multiplier))) AS effectiveness \
+                                    FROM pokemon AS p \
+                                    JOIN pokemon_moves AS pm ON p.pokemon_id = pm.pokemon_id \
+                                    JOIN moves AS m ON m.move_id = pm.move_id \
+                                    JOIN type_effectiveness AS te ON te.attacking_type = m.type \
+                                    WHERE te.defending_type = %s OR te.defending_type = %s\
+                                    GROUP BY m.move_name, p.pokemon_name, m.type, m.power \
+                                    ORDER BY effectiveness DESC, m.power DESC"""
+                            cursor.execute(sql, (t1, t2))
+                            results = cursor.fetchall()
+                        else: 
+                            sql = """SELECT DISTINCT p.pokemon_name, m.move_name, m.type, m.power, te.multiplier \
+                                    FROM pokemon AS p \
+                                    JOIN pokemon_moves AS pm ON p.pokemon_id = pm.pokemon_id \
+                                    JOIN moves AS m ON m.move_id = pm.move_id \
+                                    JOIN type_effectiveness AS te ON te.attacking_type = m.type \
+                                    WHERE te.defending_type = %s \
+                                    ORDER BY te.multiplier DESC, m.power DESC"""
+                            cursor.execute(sql, (t1))
+                            results = cursor.fetchall()
+                        df = pd.DataFrame(results)
+                finally:
+                    connection.close()
+        elif pkmns2.pokemon_submit_opp.data and pkmns2.validate():
+            print("query 3")
+            opp2 = pkmns2.pokemons_opp.data
+            connection = get_pymysql_connection()
+
+            if opp2 != 'Blank':
+                try: 
+                    with connection.cursor() as cursor:
+                        # get the opponent type(s)
+                        sql = """SELECT DISTINCT p.pokemon_name, p.type1, p.type2 \
+                                FROM pokemon p \
+                                WHERE p.pokemon_name = %s"""
+                        cursor.execute(sql, (opp2))
+                        results = cursor.fetchall()
+                        t1 = results[0]['type1']
+                        t2 = results[0]['type2']
+
+                        # type effectiveness chart with double types
+                        sql = """CREATE TABLE IF NOT EXISTS all_type_effectiveness AS 
+                                    SELECT t1.attacking_type as attack_type_1, t2.attacking_type as attack_type_2, t1.defending_type as defend_type_1, t2.defending_type as defend_type_2, (t1.multiplier*t2.multiplier) as combined_multiplier
+                                    FROM type_effectiveness AS t1 
+                                    CROSS JOIN type_effectiveness AS t2 
+                                    """
+                        cursor.execute(sql)
+
+                        sql = """ALTER TABLE all_type_effectiveness MODIFY attack_type_2 varchar(20)
+                                    """
+                        cursor.execute(sql)
+
+                        sql = """ALTER TABLE all_type_effectiveness MODIFY defend_type_2 varchar(20)
+                                    """
+                        cursor.execute(sql)
+
+                        sql = """UPDATE all_type_effectiveness
+                                    SET attack_type_2 = NULL
+                                    WHERE attack_type_1 = attack_type_2
+                                    """
+                        cursor.execute(sql)
+                        sql = """UPDATE all_type_effectiveness
+                                    SET defend_type_2 = NULL
+                                    WHERE defend_type_1 = defend_type_2
+                                    """
+                        cursor.execute(sql)
+
+                        if t2:
+                            sql = """SELECT p.pokemon_name, p.type1, p.type2, ate.combined_multiplier \
+                                    FROM pokemon AS p \
+                                    JOIN all_type_effectiveness AS ate ON ate.defend_type_1 = p.type1 AND ate.defend_type_2 = p.type2 \
+                                    WHERE ate.attack_type_1 = %s AND ate.attack_type_2 = %s\
+                                    ORDER BY ate.combined_multiplier DESC\
+                                    LIMIT 10
+                                    """
+                        else:
+                            sql = """SELECT p.pokemon_name, p.type1, p.type2, ate.combined_multiplier \
+                                    FROM pokemon AS p \
+                                    JOIN all_type_effectiveness AS ate ON ate.defend_type_1 = p.type1 AND ate.defend_type_2 = p.type2 \
+                                    WHERE ate.attack_type_1 = %s AND ate.attack_type_2 is %s\
+                                    ORDER BY ate.combined_multiplier DESC\
+                                    LIMIT 10
+                                    """
+
+                        cursor.execute(sql, (t1, t2))
+                        results = cursor.fetchall()
+                        df = pd.DataFrame(results)
+                finally:
+                    connection.close()
+        else: 
             move = moves.moves.data
             legendary = legendaryfm.legendary.data
             ability = abilities.abilities.data
@@ -181,9 +300,8 @@ def pokemon():
             connection = get_pymysql_connection()
 
             if all(x == 'Blank' for x in [move, ability, type1, region]):
-                        render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
-                            ability=ability, type1=type1, region=region, move=move, legendary=legendary, 
-                            legendaryfm=legendaryfm, move_spec=move_spec, tables=[df.to_html(header="true", border=2, justify="center")])
+                        render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, legendaryfm=legendaryfm, pkmns=pkmns, opp=opponent, pkmns2=pkmns2, opp2=opp2,
+                           move_spec=move_spec, ability=ability, type1=type1, region=region, move=move, legendary=legendary, tables=[df.to_html(header="true", border=2, justify="center")])
 
             try: 
                 with connection.cursor() as cursor:
@@ -218,9 +336,8 @@ def pokemon():
                 connection.close()
 
     df = style_df(df)
-    return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, legendaryfm=legendaryfm,
-                           ability=ability, type1=type1, region=region, move=move, legendary=legendary, 
-                            move_spec=move_spec, tables=[df.to_html(header="true", border=2, justify="center")])
+    return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, legendaryfm=legendaryfm, pkmns=pkmns, opp=opponent, pkmns2=pkmns2, opp2=opp2,
+                           move_spec=move_spec, ability=ability, type1=type1, region=region, move=move, legendary=legendary, tables=[df.to_html(header="true", border=2, justify="center")])
 
 @app.route("/newtrainer", methods=['GET', 'POST'])
 def newtrainer():

@@ -14,7 +14,7 @@
                 <h2>Pokemon</h2>
                 <a href="/"  class="btn btn-outline-secondary my-2">Back to index</a>
 
-                <div class="py-2"> 
+                <div class="py-2" style="border-bottom:1px solid #cecece;"> 
                     Show a list of Pokemon with
                     <form action="" method="POST" name="Moves" class="py-2">
                         <div class="row mb-2">
@@ -62,8 +62,8 @@
                     Values: {{move}} {{ability}} {{type1}} {{region}} {{legendary}}
                 </div>
 
-                <div class = "py-2">
-                    Show pokemon based on power/accuracy of moves: 
+                <div class = "py-2" style="border-bottom:1px solid #cecece;">
+                    Show Pokemon based on power/accuracy of moves: 
                     <form action = "" method = "POST" name = "NameInsert" class = "py-2">
                         <div class = "row-mb-2">
                             {{ move_spec.power.label }} <br>
@@ -73,10 +73,42 @@
                         {{ move_spec.accuracy.label }} <br>
                         {{ move_spec.accuracy(size=30) }} <br>
                         </div>
+                        <p></p>
                         {{ move_spec.submit() }}
                     </form>
                 </div>
 
+                <div class="py-2" style="border-bottom:1px solid #cecece;"> 
+                    Show a list of Pokemon with moves most effective against
+                    <form action="" method="POST" name="Moves" class="py-2">
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Opponent
+                            </div>
+                            <div class="col-sm-2">
+                            {{pkmns.pokemons()}}
+                            </div>
+                        </div>
+                        {{pkmns.pokemon_submit()}}
+                    </form>
+                    Values: {{opp}}
+                </div>
+
+                <div class="py-2"> 
+                    Show the top 10 Pokemon at a type disadvantage to
+                    <form action="" method="POST" name="Moves" class="py-2">
+                        <div class="row mb-2">
+                            <div class="col-sm-2">
+                                Opponent
+                            </div>
+                            <div class="col-sm-2">
+                            {{pkmns2.pokemons_opp()}}
+                            </div>
+                        </div>
+                        {{pkmns2.pokemon_submit_opp()}}
+                    </form>
+                    Values: {{opp2}}
+                </div>
 
                 <div class="links d-flex flex-wrap gap-2"> <!-- https://stackoverflow.com/questions/64204395/how-to-make-space-between-items-using-d-flex -->
                     <a href="/pokemon" class="btn btn-primary">Pokemon</a>
@@ -86,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="col-6" style="max-height: 600px; overflow-y: auto; border: 1px solid grey; padding: 15px;">
+            <div class="col-6" style="position: fixed; right: 5%; max-height: 600px; overflow-y: auto; border: 1px solid grey; padding: 15px;">
                 {% for table in tables %}
                     {{ table|safe }}
                 {% endfor %}

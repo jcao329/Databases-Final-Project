@@ -1,10 +1,16 @@
 from flask import Flask, render_template, request
-from wtforms import Form, SelectField, StringField, SubmitField, BooleanField
-from wtforms.validators import DataRequired
+from wtforms import Form, SelectField, StringField, SubmitField, BooleanField, IntegerField
+from wtforms.validators import DataRequired, Optional
 from load_data import POKEMON, MOVES, ABILITIES, TYPES, REGIONS, TEAMS, TRAINERS
 import pandas as pd
 import pymysql
 import os
+
+
+class MoveSpecForm(Form):
+    power = IntegerField('Power greater than:', validators=[Optional()])
+    accuracy = IntegerField('Accuracy greater than:',validators=[Optional()])
+    submit = SubmitField('Search')
 
 
 class MovesForm(Form):
@@ -105,14 +111,13 @@ class CombinedTrainerForm(Form):
     combined_submit = SubmitField('Search')
     
     
-    
 
 
 def get_pymysql_connection(): # https://www.geeksforgeeks.org/connect-to-mysql-using-pymysql-in-python/
     return pymysql.connect(
         host='localhost',
         user='root',
-        password = "password", # MODIFY FOR YOUR PASSWORD
+        password = 'password', # MODIFY FOR YOUR PASSWORD
         db='Pokemon',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -134,12 +139,14 @@ def pokemon():
     legendaryfm = LegendaryForm(request.form)
     pkmns = PokemonsForm(request.form)
     pkmns2 = PokemonsOppForm(request.form)
+    move_spec = MoveSpecForm(request.form)
 
     move = 'Blank'
     ability = 'Blank'
     type1 = 'Blank'
     region = 'Blank'
     legendary = False
+    # move_spec = 'Blank'
     opponent = 'Blank'
     opp2 = 'Blank'
 
@@ -147,7 +154,35 @@ def pokemon():
     df = pd.read_csv('data/pokemon.csv')[["pokemon_name", "is_legendary", "type1", "type2"]]
     
     if request.method == 'POST':
-        if pkmns.pokemon_submit.data and pkmns.validate():
+        if move_spec.submit.data and move_spec.validate():
+            power = move_spec.power.data
+            accuracy = move_spec.accuracy.data
+            connection = get_pymysql_connection()
+
+            try:
+                with connection.cursor() as cursor:
+                    sql =  """
+                    SELECT p.pokemon_name, m.move_name, m.power, m.accuracy
+                    FROM pokemon p 
+                    JOIN pokemon_moves pm ON p.pokemon_id = pm.pokemon_id
+                    JOIN moves m ON m.move_id = pm.move_id
+                    WHERE 1 = 1"""
+                    
+                    params = []
+                    if power is not None:
+                        sql += " AND m.power >= %s"
+                        params.append(power)
+                    elif accuracy is not None:
+                        sql += " AND m.accuracy >= %s"
+                        params.append(accuracy)
+
+                    cursor.execute(sql, params)
+                    results = cursor.fetchall()
+                    df = pd.DataFrame(results)
+                    df = df.dropna(subset=['power', 'accuracy'])
+            finally:
+                connection.close()
+        elif pkmns.pokemon_submit.data and pkmns.validate():
             # print("query 2")
             # print(request.form)
             opponent = pkmns.pokemons.data
@@ -265,9 +300,8 @@ def pokemon():
             connection = get_pymysql_connection()
 
             if all(x == 'Blank' for x in [move, ability, type1, region]):
-                        render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, 
-                            ability=ability, type1=type1, region=region, move=move, legendary=legendary, legendaryfm=legendaryfm,
-                            tables=[df.to_html(header="true", border=2, justify="center")])
+                        render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, legendaryfm=legendaryfm, pkmns=pkmns, opp=opponent, pkmns2=pkmns2, opp2=opp2,
+                           move_spec=move_spec, ability=ability, type1=type1, region=region, move=move, legendary=legendary, tables=[df.to_html(header="true", border=2, justify="center")])
 
             try: 
                 with connection.cursor() as cursor:
@@ -303,7 +337,7 @@ def pokemon():
 
     df = style_df(df)
     return render_template('pokemon.html', moves=moves, abilities=abilities, types1=types1, regions=regions, legendaryfm=legendaryfm, pkmns=pkmns, opp=opponent, pkmns2=pkmns2, opp2=opp2,
-                           ability=ability, type1=type1, region=region, move=move, legendary=legendary, tables=[df.to_html(header="true", border=2, justify="center")])
+                           move_spec=move_spec, ability=ability, type1=type1, region=region, move=move, legendary=legendary, tables=[df.to_html(header="true", border=2, justify="center")])
 
 @app.route("/newtrainer", methods=['GET', 'POST'])
 def newtrainer():
@@ -554,4 +588,4 @@ def teams():
     return render_template('teams.html', regions=regions, region=region, teams=teams, team=team, pkmn_teams=pkmn_teams, pkmn_team=pkmn_team, tables=[df.to_html(header="true", border=2, justify="center")])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=50001)
